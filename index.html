@@ -3,309 +3,341 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>ConnectAPI — Onboarding Demo</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<title>RingCentral CPaaS — Onboarding Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: #0a0a0f;
-    color: #e8e8f0;
-    font-family: 'DM Sans', 'Helvetica Neue', sans-serif;
+    background: #f5f7fa;
+    color: #1a1f36;
+    font-family: 'Inter', 'Helvetica Neue', sans-serif;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
   }
-  @keyframes spin    { to { transform: rotate(360deg); } }
-  @keyframes fadeUp  { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
-  @keyframes pulse   { 0%,100%{opacity:1} 50%{opacity:.35} }
-  @keyframes checkPop{ 0%{transform:scale(0)} 70%{transform:scale(1.25)} 100%{transform:scale(1)} }
-  @keyframes slideIn { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
-  @keyframes shake   { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
-  @keyframes notifDrop { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── Brand tokens ── */
+  :root {
+    --rc-blue:       #0684BC;
+    --rc-blue-dark:  #045f8a;
+    --rc-blue-light: #e6f4fb;
+    --rc-blue-mid:   #cce8f5;
+    --rc-orange:     #FF7A00;
+    --rc-orange-light: #fff3e6;
+    --rc-orange-mid:   #ffe0b3;
+    --text-primary:  #1a1f36;
+    --text-secondary:#4f566b;
+    --text-muted:    #8792a2;
+    --border:        #e3e8ef;
+    --border-mid:    #c8d0da;
+    --surface:       #ffffff;
+    --surface-2:     #f5f7fa;
+    --surface-3:     #eef2f7;
+    --success:       #00875a;
+    --success-light: #e3f5ee;
+    --success-mid:   #b3e6d0;
+    --error:         #df1b41;
+    --error-light:   #fde8ec;
+  }
+
+  @keyframes spin     { to { transform: rotate(360deg); } }
+  @keyframes fadeUp   { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes pulse    { 0%,100%{opacity:1} 50%{opacity:.4} }
+  @keyframes checkPop { 0%{transform:scale(0)} 70%{transform:scale(1.2)} 100%{transform:scale(1)} }
+  @keyframes slideIn  { from{opacity:0;transform:translateX(16px)} to{opacity:1;transform:translateX(0)} }
+  @keyframes shake    { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)} 40%{transform:translateX(5px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
 
   /* ── Layout ── */
   #app { display: flex; flex-direction: column; min-height: 100vh; }
 
   /* ── Header ── */
   #header {
-    border-bottom: 1px solid #1a1a28;
-    padding: 15px 28px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    height: 56px;
     display: flex; align-items: center; justify-content: space-between;
-    background: rgba(10,10,15,0.96);
     position: sticky; top: 0; z-index: 100;
-    backdrop-filter: blur(12px);
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
   }
   .header-left  { display:flex; align-items:center; gap:10px; }
   .header-right { display:flex; align-items:center; gap:10px; }
   .logo-icon {
-    width:32px; height:32px; border-radius:8px;
-    background: linear-gradient(135deg,#6c5ce7,#a855f7);
-    display:flex; align-items:center; justify-content:center; font-size:16px;
+    width:30px; height:30px; border-radius:6px;
+    background: linear-gradient(135deg, var(--rc-blue), var(--rc-blue-dark));
+    display:flex; align-items:center; justify-content:center; font-size:15px;
   }
-  .logo-name  { font-size:15px; font-weight:700; letter-spacing:-.01em; }
+  .logo-name  { font-size:15px; font-weight:700; color:var(--text-primary); letter-spacing:-.01em; }
   .demo-badge {
-    font-size:10px; font-weight:600; padding:2px 7px;
-    background:#1e1e2e; border:1px solid #2a2a3e;
-    border-radius:100px; color:#6c5ce7; letter-spacing:.05em;
+    font-size:10px; font-weight:600; padding:2px 8px;
+    background: var(--rc-blue-light); border:1px solid var(--rc-blue-mid);
+    border-radius:100px; color:var(--rc-blue); letter-spacing:.05em;
   }
-  .credits-info { display:flex; align-items:center; gap:6px; font-size:12px; color:#a0a0c0; }
-  .status-dot { width:7px; height:7px; border-radius:50%; background:#00b894; display:inline-block; animation:pulse 2s ease-in-out infinite; }
+  .credits-info { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-secondary); }
+  .status-dot { width:7px; height:7px; border-radius:50%; background:var(--success); display:inline-block; animation:pulse 2s ease-in-out infinite; }
   #restart-btn {
-    background:#1a1a28; border:1px solid #2a2a3e; border-radius:7px;
-    padding:7px 13px; color:#a0a0c0; font-size:12px; cursor:pointer;
-    font-family:'DM Sans',sans-serif; display:none;
+    background:var(--surface-3); border:1px solid var(--border);
+    border-radius:6px; padding:6px 12px; color:var(--text-secondary);
+    font-size:12px; font-weight:500; cursor:pointer;
+    font-family:'Inter',sans-serif; display:none; transition:all .15s;
   }
-  #restart-btn:hover { color:#e8e8f0; border-color:#6c5ce7; }
+  #restart-btn:hover { border-color:var(--rc-blue); color:var(--rc-blue); background:var(--rc-blue-light); }
 
   /* ── Main ── */
-  #main { padding: 28px 24px 60px; max-width: 600px; margin: 0 auto; width: 100%; }
+  #main { padding: 32px 24px 60px; max-width: 580px; margin: 0 auto; width: 100%; }
 
   /* ── Stepper ── */
-  #stepper { display:flex; align-items:center; margin-bottom:40px; }
+  #stepper { display:flex; align-items:center; margin-bottom:36px; }
   .step-item { display:flex; flex-direction:column; align-items:center; gap:5px; }
-  .step-connector { flex:1; height:1px; margin:0 6px; margin-bottom:18px; background:#1a1a28; transition:background .5s; }
-  .step-connector.done { background: linear-gradient(90deg,#00b894,#00cec9); }
+  .step-connector { flex:1; height:2px; margin:0 6px; margin-bottom:18px; background:var(--border); transition:background .4s; border-radius:2px; }
+  .step-connector.done { background: var(--rc-blue); }
   .step-circle {
     width:30px; height:30px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
-    font-size:12px; font-weight:700; color:#44445a;
-    background:#141422; transition:all .3s;
+    font-size:12px; font-weight:600; color:var(--text-muted);
+    background:var(--surface-3); border:2px solid var(--border); transition:all .3s;
   }
-  .step-circle.active { background:linear-gradient(135deg,#6c5ce7,#a855f7); color:#fff; box-shadow:0 0 0 3px rgba(108,92,231,.25); }
-  .step-circle.done   { background:linear-gradient(135deg,#00b894,#00cec9); color:#fff; animation:checkPop .4s ease; }
-  .step-label { font-size:10px; font-weight:500; white-space:nowrap; color:#33334a; letter-spacing:.03em; }
-  .step-label.active { color:#a090f0; }
-  .step-label.done   { color:#00b894; }
+  .step-circle.active { background:var(--rc-blue); color:#fff; border-color:var(--rc-blue); box-shadow:0 0 0 3px rgba(6,132,188,.15); }
+  .step-circle.done   { background:var(--rc-blue); color:#fff; border-color:var(--rc-blue); animation:checkPop .4s ease; }
+  .step-label { font-size:10px; font-weight:500; white-space:nowrap; color:var(--text-muted); letter-spacing:.02em; }
+  .step-label.active { color:var(--rc-blue); font-weight:600; }
+  .step-label.done   { color:var(--rc-blue); }
 
-  /* ── Cards / Panels ── */
-  .panel { animation: fadeUp .35s ease forwards; }
-  h1.title { font-size:25px; font-weight:700; margin-bottom:5px; letter-spacing:-.02em; }
-  p.subtitle { font-size:14px; color:#55556e; margin-bottom:24px; line-height:1.6; }
+  /* ── Panel ── */
+  .panel { animation: fadeUp .3s ease forwards; }
+  h1.title { font-size:24px; font-weight:700; margin-bottom:6px; letter-spacing:-.02em; color:var(--text-primary); }
+  p.subtitle { font-size:14px; color:var(--text-secondary); margin-bottom:24px; line-height:1.6; }
 
-  /* ── Inputs ── */
-  .field-row { display:flex; gap:10px; }
+  /* ── Form ── */
+  .field-row { display:flex; gap:12px; }
   .field-row .field { flex:1; }
-  .field { margin-bottom:12px; }
-  .field label { font-size:12px; color:#55556e; display:block; margin-bottom:5px; }
+  .field { margin-bottom:14px; }
+  .field label { font-size:12px; font-weight:500; color:var(--text-secondary); display:block; margin-bottom:5px; }
   .inp, .sel, .tarea {
-    width:100%; background:#13131e; border:1px solid #2a2a3e;
-    border-radius:8px; padding:11px 14px; color:#e8e8f0;
-    font-family:'DM Sans',sans-serif; font-size:14px;
-    outline:none; transition:border-color .2s;
+    width:100%; background:var(--surface); border:1.5px solid var(--border);
+    border-radius:8px; padding:10px 13px; color:var(--text-primary);
+    font-family:'Inter',sans-serif; font-size:14px;
+    outline:none; transition:border-color .15s, box-shadow .15s;
   }
-  .inp:focus, .sel:focus, .tarea:focus { border-color:#6c5ce7; }
-  .inp::placeholder, .tarea::placeholder { color:#44445a; }
-  .sel { appearance:none; }
+  .inp:focus, .sel:focus, .tarea:focus {
+    border-color:var(--rc-blue);
+    box-shadow:0 0 0 3px rgba(6,132,188,.12);
+  }
+  .inp::placeholder, .tarea::placeholder { color:var(--text-muted); }
+  .sel { appearance:none; cursor:pointer; }
   .tarea { resize:none; }
-  .field-hint { font-size:11px; color:#33334a; margin-top:5px; }
+  .field-hint { font-size:11px; color:var(--text-muted); margin-top:5px; }
 
   /* ── Buttons ── */
   .btn-primary {
-    width:100%; background:linear-gradient(135deg,#6c5ce7,#a855f7);
-    color:#fff; border:none; border-radius:8px; padding:13px;
+    width:100%; background:var(--rc-blue); color:#fff;
+    border:none; border-radius:8px; padding:12px;
     font-size:14px; font-weight:600; cursor:pointer;
-    font-family:'DM Sans',sans-serif; letter-spacing:.01em;
-    transition:opacity .2s, transform .1s; display:flex;
-    align-items:center; justify-content:center; gap:8px;
+    font-family:'Inter',sans-serif; letter-spacing:.01em;
+    transition:background .15s, transform .1s, box-shadow .15s;
+    display:flex; align-items:center; justify-content:center; gap:8px;
   }
-  .btn-primary:hover:not(:disabled) { opacity:.88; transform:translateY(-1px); }
+  .btn-primary:hover:not(:disabled) { background:var(--rc-blue-dark); box-shadow:0 2px 8px rgba(6,132,188,.3); transform:translateY(-1px); }
   .btn-primary:active:not(:disabled) { transform:translateY(0); }
-  .btn-primary:disabled { opacity:.35; cursor:not-allowed; }
+  .btn-primary:disabled { background:#b3cfe8; cursor:not-allowed; }
   .btn-ghost {
-    background:none; border:none; color:#6c5ce7;
-    font-family:'DM Sans',sans-serif; font-size:13px;
-    cursor:pointer; text-decoration:underline; padding:0;
+    background:none; border:none; color:var(--rc-blue);
+    font-family:'Inter',sans-serif; font-size:13px;
+    cursor:pointer; text-decoration:underline; padding:0; font-weight:500;
   }
-  .btn-ghost:disabled { color:#44445a; cursor:not-allowed; text-decoration:none; }
+  .btn-ghost:disabled { color:var(--text-muted); cursor:not-allowed; text-decoration:none; }
   .btn-toggle {
-    width:100%; background:#0f0f1a; border:1px solid #1e1e2e;
-    border-radius:8px; padding:11px 14px; color:#a0a0c0; font-size:13px;
-    cursor:pointer; margin-bottom:14px; font-family:'DM Sans',sans-serif;
-    display:flex; justify-content:space-between; align-items:center;
+    width:100%; background:var(--surface-3); border:1.5px solid var(--border);
+    border-radius:8px; padding:10px 14px; color:var(--text-secondary); font-size:13px; font-weight:500;
+    cursor:pointer; margin-bottom:14px; font-family:'Inter',sans-serif;
+    display:flex; justify-content:space-between; align-items:center; transition:all .15s;
   }
-  .btn-toggle .arrow { color:#6c5ce7; font-size:11px; }
+  .btn-toggle:hover { border-color:var(--rc-blue); color:var(--rc-blue); background:var(--rc-blue-light); }
+  .btn-toggle .arrow { color:var(--rc-blue); font-size:11px; }
 
-  /* ── Info / notice boxes ── */
-  .info-box {
-    background:#0f0f1a; border:1px solid #1e1e2e;
-    border-radius:10px; padding:12px 14px; margin-bottom:14px;
-    display:flex; gap:10px; align-items:flex-start; font-size:12px; color:#55556e; line-height:1.5;
+  /* ── Cards / boxes ── */
+  .card {
+    background:var(--surface); border:1.5px solid var(--border);
+    border-radius:12px; padding:16px;
   }
-  .warn-box {
-    background:rgba(225,112,85,.06); border:1px solid rgba(225,112,85,.18);
+  .info-notice {
+    background:var(--rc-blue-light); border:1.5px solid var(--rc-blue-mid);
     border-radius:10px; padding:12px 14px; margin-bottom:16px;
-    display:flex; gap:10px; align-items:flex-start; font-size:12px; color:#966660; line-height:1.5;
+    display:flex; gap:10px; align-items:flex-start; font-size:12px; color:var(--rc-blue-dark); line-height:1.5;
   }
-  .warn-box strong { color:#e17055; }
+  .warn-notice {
+    background:var(--rc-orange-light); border:1.5px solid var(--rc-orange-mid);
+    border-radius:10px; padding:12px 14px; margin-bottom:16px;
+    display:flex; gap:10px; align-items:flex-start; font-size:12px; color:#7a3a00; line-height:1.5;
+  }
+  .warn-notice strong { color:var(--rc-orange); }
   .success-box {
-    background:rgba(0,184,148,.07); border:1px solid rgba(0,184,148,.2);
-    border-radius:12px; padding:22px; margin-bottom:16px; text-align:center;
+    background:var(--success-light); border:1.5px solid var(--success-mid);
+    border-radius:12px; padding:24px; margin-bottom:16px; text-align:center;
   }
   .success-box .emoji { font-size:36px; margin-bottom:8px; }
-  .success-box .title { font-weight:700; font-size:17px; color:#00b894; margin-bottom:4px; }
-  .success-box .sub   { font-size:13px; color:#55556e; }
+  .success-box .stitle { font-weight:700; font-size:17px; color:var(--success); margin-bottom:4px; }
+  .success-box .ssub   { font-size:13px; color:var(--text-secondary); }
 
   /* ── Credits card ── */
   .credits-card {
-    background:linear-gradient(135deg,rgba(108,92,231,.12),rgba(168,85,247,.07));
-    border:1px solid rgba(108,92,231,.28); border-radius:14px; padding:22px; margin-bottom:18px;
+    background: linear-gradient(135deg, var(--rc-blue) 0%, var(--rc-blue-dark) 100%);
+    border-radius:14px; padding:22px; margin-bottom:18px; color:#fff;
   }
   .credits-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; }
-  .credits-label { font-size:11px; color:#55556e; margin-bottom:3px; letter-spacing:.05em; }
-  .credits-amount { font-size:38px; font-weight:700; letter-spacing:-.03em; line-height:1; }
-  .credits-icon {
-    background:rgba(108,92,231,.18); border-radius:8px; padding:8px; color:#a090f0;
-    display:flex; align-items:center; justify-content:center;
-  }
+  .credits-lbl { font-size:11px; opacity:.8; margin-bottom:4px; letter-spacing:.06em; font-weight:500; }
+  .credits-amt { font-size:36px; font-weight:700; letter-spacing:-.03em; line-height:1; }
+  .credits-icon { background:rgba(255,255,255,.15); border-radius:8px; padding:8px; display:flex; align-items:center; }
   .pill-row { display:flex; gap:6px; flex-wrap:wrap; }
-  .green-pill {
-    background:rgba(0,184,148,.15); border:1px solid rgba(0,184,148,.25);
-    border-radius:100px; padding:3px 10px; font-size:11px; font-weight:600; color:#00b894;
+  .white-pill {
+    background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.3);
+    border-radius:100px; padding:3px 10px; font-size:11px; font-weight:600; color:#fff;
   }
 
   /* ── Feature rows ── */
-  .feature-list { display:flex; flex-direction:column; gap:10px; margin-bottom:22px; }
+  .feature-list { display:flex; flex-direction:column; gap:8px; margin-bottom:22px; }
   .feature-item {
     display:flex; gap:12px; padding:12px 14px;
-    background:#0f0f1a; border-radius:9px; border:1px solid #1a1a28;
+    background:var(--surface); border-radius:9px; border:1.5px solid var(--border);
+    transition:border-color .15s;
   }
-  .feature-icon { font-size:18px; }
-  .feature-title { font-weight:600; font-size:13px; margin-bottom:2px; }
-  .feature-desc  { font-size:12px; color:#44445a; }
+  .feature-item:hover { border-color:var(--rc-blue-mid); }
+  .feature-icon { font-size:18px; flex-shrink:0; }
+  .feature-title { font-weight:600; font-size:13px; margin-bottom:2px; color:var(--text-primary); }
+  .feature-desc  { font-size:12px; color:var(--text-muted); }
 
   /* ── Number / provisioned ── */
   .num-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-  .num-label { font-size:11px; color:#44445a; margin-bottom:5px; letter-spacing:.04em; }
+  .num-label { font-size:10px; color:var(--text-muted); margin-bottom:6px; letter-spacing:.05em; font-weight:600; text-transform:uppercase; }
   .prov-badge {
-    display:inline-flex; align-items:center; gap:6px;
-    background:rgba(108,92,231,.15); border:1px solid rgba(108,92,231,.4);
-    border-radius:8px; padding:6px 12px; font-size:13px;
-    font-family:'DM Mono',monospace; color:#a090f0; font-weight:600;
+    display:inline-flex; align-items:center; gap:5px;
+    background:var(--rc-blue-light); border:1.5px solid var(--rc-blue-mid);
+    border-radius:7px; padding:5px 10px; font-size:13px;
+    font-family:'JetBrains Mono',monospace; color:var(--rc-blue); font-weight:500;
   }
-  .prov-badge .hash { color:#6c5ce7; }
+  .prov-badge .hash { color:var(--rc-orange); font-weight:700; }
   .lock-pill {
     display:inline-flex; align-items:center; gap:5px;
-    background:rgba(108,92,231,.12); border:1px solid rgba(108,92,231,.3);
-    border-radius:100px; padding:3px 10px; font-size:11px; color:#a090f0; font-weight:500;
-    font-family:'DM Mono',monospace;
+    background:var(--rc-orange-light); border:1.5px solid var(--rc-orange-mid);
+    border-radius:7px; padding:5px 10px; font-size:12px; color:#7a3a00; font-weight:500;
+    font-family:'JetBrains Mono',monospace;
   }
 
   /* ── OTP ── */
   #otp-wrap { display:flex; gap:8px; justify-content:center; }
   .otp-digit {
     width:44px; height:52px; text-align:center;
-    font-size:22px; font-weight:700; font-family:'DM Mono',monospace;
-    background:#13131e; border:2px solid #2a2a3e;
-    border-radius:10px; color:#e8e8f0; outline:none;
+    font-size:22px; font-weight:700; font-family:'JetBrains Mono',monospace;
+    background:var(--surface); border:2px solid var(--border);
+    border-radius:10px; color:var(--text-primary); outline:none;
     transition:all .15s; caret-color:transparent;
   }
-  .otp-digit.filled { background:rgba(108,92,231,.12); border-color:#6c5ce7; }
-  .otp-digit.error  { border-color:#e17055; }
-  .otp-digit:focus  { border-color:#6c5ce7; }
-  #otp-box { background:#0f0f1a; border:1px solid #1e1e2e; border-radius:12px; padding:20px; margin-bottom:20px; }
-  #otp-box h3 { font-size:13px; font-weight:600; text-align:center; margin-bottom:16px; color:#a0a0c0; }
+  .otp-digit.filled { background:var(--rc-blue-light); border-color:var(--rc-blue); color:var(--rc-blue); }
+  .otp-digit.error  { border-color:var(--error); background:var(--error-light); }
+  .otp-digit:focus  { border-color:var(--rc-blue); box-shadow:0 0 0 3px rgba(6,132,188,.12); }
+  #otp-box { background:var(--surface-3); border:1.5px solid var(--border); border-radius:12px; padding:20px; margin-bottom:20px; }
+  #otp-box h3 { font-size:13px; font-weight:600; text-align:center; margin-bottom:16px; color:var(--text-secondary); }
   #otp-msg  { text-align:center; font-size:12px; margin-top:10px; min-height:18px; }
   .otp-shake { animation: shake .4s ease; }
-  #resend-row { text-align:center; margin-bottom:16px; font-size:12px; color:#44445a; }
+  #resend-row { text-align:center; margin-bottom:16px; font-size:12px; color:var(--text-muted); }
 
   /* ── Phone notification ── */
-  #notif-wrap { margin:0 auto 24px; width:260px; }
+  #notif-wrap { margin:0 auto 24px; width:280px; }
   #notif-card {
-    background:#1a1a2e; border:1px solid #2a2a40; border-radius:16px; padding:12px 16px;
-    box-shadow:0 8px 32px rgba(0,0,0,.4); display:flex; gap:12px; align-items:flex-start;
-    opacity:0; transform:translateY(-10px); transition:opacity .4s ease, transform .4s ease;
+    background:var(--surface); border:1.5px solid var(--border); border-radius:16px; padding:12px 14px;
+    box-shadow:0 4px 16px rgba(0,0,0,.1); display:flex; gap:10px; align-items:flex-start;
+    opacity:0; transform:translateY(-8px); transition:opacity .4s ease, transform .4s ease;
   }
   #notif-card.visible { opacity:1; transform:translateY(0); }
   .notif-icon {
-    width:36px; height:36px; border-radius:10px; flex-shrink:0;
-    background:linear-gradient(135deg,#6c5ce7,#a855f7);
-    display:flex; align-items:center; justify-content:center; font-size:18px;
+    width:36px; height:36px; border-radius:9px; flex-shrink:0;
+    background:linear-gradient(135deg,var(--rc-blue),var(--rc-blue-dark));
+    display:flex; align-items:center; justify-content:center; font-size:17px;
   }
-  .notif-app  { font-size:12px; font-weight:700; color:#e8e8f0; }
-  .notif-time { font-size:11px; color:#44445a; }
-  .notif-body { font-size:12px; color:#a0a0c0; margin-top:3px; line-height:1.5; }
-  .notif-code { color:#a855f7; font-weight:700; font-family:'DM Mono',monospace; letter-spacing:.1em; }
+  .notif-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:3px; }
+  .notif-app  { font-size:12px; font-weight:600; color:var(--text-primary); }
+  .notif-time { font-size:11px; color:var(--text-muted); }
+  .notif-body { font-size:12px; color:var(--text-secondary); line-height:1.5; }
+  .notif-code { color:var(--rc-blue); font-weight:700; font-family:'JetBrains Mono',monospace; letter-spacing:.1em; }
 
   /* ── Spinner ── */
-  .spinner-wrap { padding:40px 0; text-align:center; }
+  .spinner-wrap { padding:44px 0; text-align:center; }
   .spinner-ring { position:relative; width:56px; height:56px; margin:0 auto 16px; }
-  .spinner-ring .track { position:absolute; inset:0; border-radius:50%; border:2px solid #1e1e30; }
-  .spinner-ring .fill  { position:absolute; inset:0; border-radius:50%; border:2px solid transparent; animation:spin .9s linear infinite; }
-  .spinner-ring .icon  { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:22px; }
-  .spinner-ring .fill.purple { border-top-color:#6c5ce7; }
-  .spinner-ring .fill.green  { border-top-color:#00b894; }
-  .spinner-ring .fill.violet { border-top-color:#a855f7; }
-  .spinner-title { font-weight:600; margin-bottom:4px; }
-  .spinner-sub   { font-size:13px; color:#55556e; }
+  .spinner-ring .track { position:absolute; inset:0; border-radius:50%; border:2.5px solid var(--border); }
+  .spinner-ring .fill  { position:absolute; inset:0; border-radius:50%; border:2.5px solid transparent; animation:spin .9s linear infinite; }
+  .spinner-ring .fill.blue   { border-top-color:var(--rc-blue); }
+  .spinner-ring .fill.green  { border-top-color:var(--success); }
+  .spinner-ring .fill.orange { border-top-color:var(--rc-orange); }
+  .spinner-ring .icon  { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:21px; }
+  .spinner-title { font-weight:600; font-size:15px; color:var(--text-primary); margin-bottom:4px; }
+  .spinner-sub   { font-size:13px; color:var(--text-secondary); }
 
   /* ── Code block ── */
   .code-block {
-    background:#0d0d16; border:1px solid #1e1e30; border-radius:10px; padding:18px;
-    font-family:'DM Mono',monospace; font-size:12px; line-height:1.75; color:#a0a0c0;
-    overflow-x:auto; white-space:pre; margin-bottom:14px; display:none;
+    background:#f0f4f8; border:1.5px solid var(--border); border-radius:10px; padding:16px;
+    font-family:'JetBrains Mono',monospace; font-size:11.5px; line-height:1.75;
+    color:#334155; overflow-x:auto; white-space:pre; margin-bottom:14px; display:none;
   }
-  .code-block.visible { display:block; animation:fadeUp .25s ease forwards; }
+  .code-block.visible { display:block; animation:fadeUp .2s ease forwards; }
 
   /* ── Phone mockup ── */
   .phone-wrap { display:flex; justify-content:center; margin-bottom:20px; }
   .phone-body {
-    width:220px; background:#0f0f1a; border-radius:22px; border:2px solid #2a2a3e;
-    padding:18px 14px; box-shadow:0 16px 50px rgba(0,0,0,.45);
+    width:220px; background:#1a1f36; border-radius:24px;
+    padding:18px 14px; box-shadow:0 12px 40px rgba(0,0,0,.15);
   }
-  .phone-notch { width:50px; height:5px; border-radius:3px; background:#2a2a3e; margin:0 auto 14px; }
-  .phone-time  { font-size:10px; color:#33334a; text-align:center; margin-bottom:8px; }
+  .phone-notch { width:48px; height:5px; border-radius:3px; background:#2d3452; margin:0 auto 14px; }
+  .phone-time  { font-size:10px; color:#5a6480; text-align:center; margin-bottom:8px; font-family:'JetBrains Mono',monospace; }
   .sms-bubble {
-    background:linear-gradient(135deg,#6c5ce7,#a855f7);
-    border-radius:18px 18px 4px 18px; padding:12px 16px; max-width:200px;
-    font-size:13px; line-height:1.5; margin-left:auto;
+    background:linear-gradient(135deg,var(--rc-blue),var(--rc-blue-dark));
+    border-radius:16px 16px 3px 16px; padding:10px 14px; max-width:190px;
+    font-size:13px; line-height:1.5; color:#fff; margin-left:auto;
     animation:slideIn .4s ease forwards;
   }
 
-  /* ── "What happened" list ── */
-  .what-list { display:flex; flex-direction:column; gap:6px; }
-  .what-item { display:flex; align-items:center; gap:8px; font-size:12px; color:#55556e; }
-  .what-item .chk { color:#00b894; }
+  /* ── What happened list ── */
+  .what-list { display:flex; flex-direction:column; gap:7px; }
+  .what-item { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-secondary); }
+  .what-item .chk { color:var(--success); font-weight:700; }
 
   /* ── Next steps ── */
   .next-steps { display:flex; flex-direction:column; gap:6px; }
   .next-item {
     display:flex; justify-content:space-between; align-items:center;
-    padding:9px 10px; background:#0f0f1a; border-radius:7px;
-    font-size:12px; color:#a0a0c0; border:1px solid #1a1a28; cursor:pointer;
+    padding:10px 12px; background:var(--surface); border-radius:8px;
+    font-size:13px; color:var(--text-secondary); border:1.5px solid var(--border);
+    cursor:pointer; transition:all .15s;
   }
-  .next-item .arrow { color:#6c5ce7; }
+  .next-item:hover { border-color:var(--rc-blue); color:var(--rc-blue); background:var(--rc-blue-light); }
+  .next-item .arrow { color:var(--rc-blue); font-weight:600; }
 
-  /* ── Check rows (KYC done) ── */
+  /* ── Checklist rows ── */
   .check-rows { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
   .check-row {
     display:flex; justify-content:space-between; align-items:center;
-    padding:10px 14px; background:#0f0f1a; border-radius:8px; border:1px solid #1a1a28;
+    padding:10px 14px; background:var(--surface); border-radius:8px; border:1.5px solid var(--border);
     font-size:13px;
   }
-  .check-row .lbl { color:#a0a0c0; }
-  .check-row .val { font-size:12px; color:#00b894; font-weight:600; }
+  .check-row .lbl { color:var(--text-secondary); }
+  .check-row .val { font-size:12px; color:var(--success); font-weight:600; }
 
   /* ── Utility ── */
   .hidden { display:none !important; }
   .mt8  { margin-top:8px; }
   .mt14 { margin-top:14px; }
-  .mt16 { margin-top:16px; }
   .mb8  { margin-bottom:8px; }
   .mb14 { margin-bottom:14px; }
   .mb16 { margin-bottom:16px; }
   .mb20 { margin-bottom:20px; }
   .mb24 { margin-bottom:24px; }
   .center { text-align:center; }
-  .mono { font-family:'DM Mono',monospace; }
-  .small { font-size:11px; color:#33334a; }
-  .purple { color:#a090f0; }
-
-  /* ── Separator ── */
-  .tos { font-size:11px; color:#33334a; margin-top:12px; text-align:center; }
-
-  /* ── Gradient box for "provisioned" in KYC done ── */
+  .mono { font-family:'JetBrains Mono',monospace; font-size:12px; }
+  .small { font-size:11px; color:var(--text-muted); }
+  .tos { font-size:11px; color:var(--text-muted); margin-top:12px; text-align:center; }
+  .section-label { font-size:10px; font-weight:600; color:var(--text-muted); letter-spacing:.06em; text-transform:uppercase; margin-bottom:8px; }
+  .divider { height:1px; background:var(--border); margin:20px 0; }
   .prov-reveal-box {
-    background:#0f0f1a; border:1px solid rgba(108,92,231,.3);
-    border-radius:10px; padding:14px 16px; margin-bottom:20px;
+    background:var(--surface); border:1.5px solid var(--rc-blue-mid);
+    border-radius:10px; padding:14px 16px; margin-bottom:16px;
     display:flex; align-items:center; justify-content:space-between;
   }
 </style>
@@ -317,15 +349,15 @@
   <div id="header">
     <div class="header-left">
       <div class="logo-icon">⚡</div>
-      <span class="logo-name">ConnectAPI</span>
-      <span class="demo-badge">DEMO</span>
+      <span class="logo-name">RingCentral</span>
+      <span class="demo-badge">CPaaS DEMO</span>
     </div>
     <div class="header-right">
       <div class="credits-info hidden" id="credits-display">
         <span class="status-dot"></span>
         <span id="credits-text">10 credits</span>
       </div>
-      <button id="restart-btn" onclick="reset()">↺ Restart</button>
+      <button id="restart-btn" onclick="reset()">↺ Restart demo</button>
     </div>
   </div>
 
@@ -376,7 +408,7 @@
       <h1 class="title">Verify your phone number</h1>
       <p class="subtitle">We'll send a one-time code to confirm your identity and provision your first API number.</p>
 
-      <!-- KYC sub-stage: form -->
+      <!-- form -->
       <div id="kyc-form">
         <div class="field">
           <label>Mobile number</label>
@@ -410,31 +442,30 @@
         <button class="btn-primary mt8" id="kyc-send-btn" onclick="sendCode()" disabled>Send verification code →</button>
       </div>
 
-      <!-- KYC sub-stage: sending -->
+      <!-- sending -->
       <div id="kyc-sending" class="spinner-wrap hidden">
         <div class="spinner-ring">
-          <div class="track"></div>
-          <div class="fill purple"></div>
+          <div class="track"></div><div class="fill blue"></div>
           <div class="icon">📱</div>
         </div>
         <p class="spinner-title">Sending verification code…</p>
         <p class="spinner-sub" id="kyc-sending-to"></p>
       </div>
 
-      <!-- KYC sub-stage: code sent / OTP entry -->
+      <!-- OTP entry -->
       <div id="kyc-otp" class="hidden">
         <p class="small center mb8">Message delivered to <span id="otp-phone-label"></span></p>
 
         <div id="notif-wrap">
           <div id="notif-card">
             <div class="notif-icon">💬</div>
-            <div>
-              <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+            <div style="flex:1">
+              <div class="notif-header">
                 <span class="notif-app">Messages</span>
                 <span class="notif-time">now</span>
               </div>
               <div class="notif-body">
-                <strong style="color:#e8e8f0">ConnectAPI:</strong> Your verification code is
+                <strong style="color:var(--text-primary)">RingCentral:</strong> Your verification code is
                 <span class="notif-code">847392</span>. Valid for 10 minutes.
               </div>
             </div>
@@ -457,56 +488,52 @@
         <div id="resend-row">
           Didn't get it? <button class="btn-ghost" id="resend-btn" onclick="sendCode()" disabled>Resend code</button>
         </div>
-
         <button class="btn-primary" id="otp-verify-btn" onclick="verifyCode()" disabled>Verify code →</button>
       </div>
 
-      <!-- KYC sub-stage: verifying -->
+      <!-- verifying -->
       <div id="kyc-verifying" class="spinner-wrap hidden">
         <div class="spinner-ring">
-          <div class="track"></div>
-          <div class="fill green"></div>
+          <div class="track"></div><div class="fill green"></div>
           <div class="icon">🛡️</div>
         </div>
         <p class="spinner-title">Code verified!</p>
         <p class="spinner-sub">Provisioning your API number…</p>
       </div>
 
-      <!-- KYC sub-stage: provisioning -->
+      <!-- provisioning -->
       <div id="kyc-provisioning" class="spinner-wrap hidden">
         <div class="spinner-ring">
-          <div class="track"></div>
-          <div class="fill violet"></div>
+          <div class="track"></div><div class="fill orange"></div>
           <div class="icon">⚡</div>
         </div>
         <p class="spinner-title">Provisioning your number…</p>
         <p class="spinner-sub">Registering with carrier network</p>
       </div>
 
-      <!-- KYC sub-stage: done -->
+      <!-- done -->
       <div id="kyc-done" class="hidden" style="animation:fadeUp .4s ease forwards">
         <div class="success-box mb16">
           <div class="emoji">✅</div>
-          <div class="title">Identity verified</div>
-          <div class="sub">Your phone number was confirmed successfully</div>
+          <div class="stitle">Identity verified</div>
+          <div class="ssub">Your phone number was confirmed successfully</div>
         </div>
 
-        <div class="mb16">
-          <p class="small mb8" style="font-weight:500;color:#55556e;letter-spacing:.04em">YOUR PROVISIONED API NUMBER</p>
-          <div class="prov-reveal-box">
-            <div>
-              <div class="prov-badge mb8"><span class="hash">#</span><span id="prov-num-kyc"></span></div>
-              <p class="small mt8">Ready to send SMS</p>
-            </div>
-            <span style="font-size:20px">📲</span>
-          </div>
-        </div>
-
-        <div class="warn-box mb20">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <div class="section-label">Your provisioned API number</div>
+        <div class="prov-reveal-box">
           <div>
-            <p><strong>Trial restriction active</strong></p>
-            <p>During trial, outbound SMS is restricted to your verified number: <span class="mono" id="kyc-done-phone"></span></p>
+            <div class="prov-badge mb8"><span class="hash">#</span><span id="prov-num-kyc"></span></div>
+            <p class="small mt8">Ready to send SMS</p>
+          </div>
+          <span style="font-size:22px">📲</span>
+        </div>
+
+        <div class="warn-notice">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <div>
+            <strong>Trial restriction active</strong><br/>
+            During trial, outbound SMS is restricted to your verified number:
+            <span class="mono" id="kyc-done-phone"></span>
           </div>
         </div>
 
@@ -522,22 +549,22 @@
       <div class="credits-card mb16">
         <div class="credits-top">
           <div>
-            <div class="credits-label">FREE CREDITS</div>
-            <div class="credits-amount">$10.00</div>
+            <div class="credits-lbl">FREE CREDITS</div>
+            <div class="credits-amt">$10.00</div>
           </div>
           <div class="credits-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
           </div>
         </div>
         <div class="pill-row">
-          <span class="green-pill">~1,000 SMS</span>
-          <span class="green-pill">~200 Voice min</span>
-          <span class="green-pill">Full API access</span>
+          <span class="white-pill">~1,000 SMS</span>
+          <span class="white-pill">~200 Voice min</span>
+          <span class="white-pill">Full API access</span>
         </div>
       </div>
 
-      <div class="warn-box">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <div class="warn-notice">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         <p><strong>Trial mode:</strong> SMS from <span class="mono" id="credits-from-num"></span> can only be sent to <span class="mono" id="credits-to-num"></span>. Upgrade to remove restrictions.</p>
       </div>
 
@@ -555,17 +582,16 @@
       <h1 class="title">Send your first SMS</h1>
       <p class="subtitle">Your provisioned number is ready. Send a message to your verified number to complete the demo.</p>
 
-      <!-- Number summary -->
-      <div class="info-box mb20" style="display:block;padding:14px 16px">
+      <div class="card mb20">
         <div class="num-grid">
           <div>
-            <div class="num-label">FROM (provisioned)</div>
+            <div class="num-label">From (provisioned)</div>
             <div class="prov-badge"><span class="hash">#</span><span id="sms-from-num"></span></div>
           </div>
           <div>
-            <div class="num-label">TO (verified only)</div>
+            <div class="num-label">To (verified only)</div>
             <div class="lock-pill">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               <span id="sms-to-num"></span>
             </div>
           </div>
@@ -576,26 +602,25 @@
       <div id="sms-compose">
         <div class="field mb16">
           <label>Message</label>
-          <textarea class="tarea" id="sms-msg" rows="3" oninput="smsCharCount()">Hello from my first CPaaS app! 🚀</textarea>
-          <p class="field-hint" id="sms-charcount">38/160 chars · 1 credit (~$0.01)</p>
+          <textarea class="tarea" id="sms-msg" rows="3" oninput="smsCharCount()">Hello from my first RingCentral app! 🚀</textarea>
+          <p class="field-hint" id="sms-charcount">40/160 chars · 1 credit (~$0.01)</p>
         </div>
 
         <button class="btn-toggle" onclick="toggleCode()">
           <span>View API code</span>
           <span class="arrow" id="code-arrow">Show ▼</span>
         </button>
-
         <pre class="code-block" id="code-block"></pre>
 
         <button class="btn-primary" id="send-btn" onclick="sendSMS()">Send SMS →</button>
       </div>
 
-      <!-- Sent success -->
+      <!-- Sent -->
       <div id="sms-sent" class="hidden" style="animation:fadeUp .4s ease forwards">
         <div class="success-box mb16">
           <div class="emoji">🎉</div>
-          <div class="title">Message delivered!</div>
-          <div class="sub" id="sms-api-resp"></div>
+          <div class="stitle">Message delivered!</div>
+          <div class="ssub" id="sms-api-resp"></div>
         </div>
 
         <div class="phone-wrap">
@@ -608,8 +633,8 @@
           </div>
         </div>
 
-        <div class="info-box mb16" style="flex-direction:column;gap:0">
-          <p style="font-size:12px;font-weight:600;color:#66668a;margin-bottom:10px">What happened</p>
+        <div class="card mb14">
+          <p class="section-label mb8">What happened</p>
           <div class="what-list">
             <div class="what-item"><span class="chk">✓</span> Auth token validated</div>
             <div class="what-item"><span class="chk">✓</span> Number lookup &amp; routing</div>
@@ -618,8 +643,8 @@
           </div>
         </div>
 
-        <div style="background:linear-gradient(135deg,rgba(108,92,231,.1),rgba(168,85,247,.06));border:1px solid rgba(108,92,231,.22);border-radius:10px;padding:16px;margin-bottom:16px">
-          <p style="font-weight:600;font-size:13px;margin-bottom:10px">Ready to go further?</p>
+        <div class="info-notice mb14" style="display:block;padding:16px">
+          <p class="section-label mb8">Ready to go further?</p>
           <div class="next-steps">
             <div class="next-item"><span>Remove trial restrictions</span><span class="arrow">→</span></div>
             <div class="next-item"><span>Explore Voice &amp; Video APIs</span><span class="arrow">→</span></div>
@@ -632,315 +657,203 @@
       </div>
     </div>
 
-  </div><!-- /main -->
-</div><!-- /app -->
+  </div>
+</div>
 
 <script>
-// ── State ──────────────────────────────────────────────
 const DEMO_CODE = '847392';
-let state = {
-  step: 0,
-  creditsUsed: 0,
-  kycPhone: '',
-  provisionedNumber: '',
-  resendTimer: null,
-  resendCountdown: 0,
-};
+let state = { step:0, creditsUsed:0, kycPhone:'', provisionedNumber:'', resendTimer:null, resendCountdown:0 };
 
-// ── Helpers ────────────────────────────────────────────
-const el  = id => document.getElementById(id);
+const el   = id => document.getElementById(id);
 const show = id => el(id).classList.remove('hidden');
 const hide = id => el(id).classList.add('hidden');
 const randId = () => Math.random().toString(36).slice(2,8);
 const genProvNum = () => {
-  const area = ['415','650','408','669','510'][Math.floor(Math.random()*5)];
-  const d = String(Math.floor(1000000 + Math.random()*9000000));
+  const areas = ['415','650','408','669','510','212','617'];
+  const area = areas[Math.floor(Math.random()*areas.length)];
+  const d = String(1000000 + Math.floor(Math.random()*9000000));
   return `+1 (${area}) ${d.slice(0,3)}-${d.slice(3,7)}`;
 };
 
-// ── Stepper ────────────────────────────────────────────
 function updateStepper() {
   const labels = ['Sign Up','Verify Identity','Your Credits','Build First App'];
-  const checks = ['✓','✓','✓','✓'];
   for (let i = 0; i < 4; i++) {
     const c = el('sc'+i), l = el('sl'+i);
-    c.className = 'step-circle';
-    l.className = 'step-label';
-    if (i < state.step)       { c.classList.add('done');   c.innerHTML = '✓';    l.classList.add('done');   }
-    else if (i === state.step) { c.classList.add('active'); c.textContent = i+1;  l.classList.add('active'); }
-    else                       { c.textContent = i+1; }
+    c.className = 'step-circle'; l.className = 'step-label';
+    if (i < state.step)        { c.classList.add('done');   c.innerHTML='✓';   l.classList.add('done'); }
+    else if (i === state.step) { c.classList.add('active'); c.textContent=i+1; l.classList.add('active'); }
+    else                       { c.textContent=i+1; }
     l.textContent = labels[i];
-    if (i < 3) el('conn'+i).className = 'step-connector' + (i < state.step ? ' done' : '');
+    if (i < 3) el('conn'+i).className = 'step-connector'+(i < state.step ? ' done' : '');
   }
 }
 
 function goNext() {
-  hide('step' + state.step);
+  hide('step'+state.step);
   state.step++;
   updateStepper();
-  show('step' + state.step);
-  // Step-specific init
+  show('step'+state.step);
   if (state.step === 2) initCreditsStep();
   if (state.step === 3) initSMSStep();
-  if (state.step >= 1) {
-    el('restart-btn').style.display = 'block';
-  }
+  if (state.step >= 1) el('restart-btn').style.display = 'block';
 }
 
-// ── Step 0: Signup ─────────────────────────────────────
+// Step 0
 ['s0name','s0email','s0pw'].forEach(id => {
   el(id).addEventListener('input', () => {
-    const ok = el('s0name').value.trim() && el('s0email').value.trim() && el('s0pw').value.length >= 1;
-    el('s0btn').disabled = !ok;
+    el('s0btn').disabled = !(el('s0name').value.trim() && el('s0email').value.trim() && el('s0pw').value);
   });
 });
-
 function signup() { goNext(); }
 
-// ── Step 1: KYC ────────────────────────────────────────
+// Step 1 KYC
 function kycFormChange() {
-  const phone = el('kyc-phone').value.trim();
-  const usecase = el('kyc-usecase').value;
-  el('kyc-send-btn').disabled = !(phone && usecase);
+  el('kyc-send-btn').disabled = !(el('kyc-phone').value.trim() && el('kyc-usecase').value);
 }
-
 function kycShow(stage) {
-  ['kyc-form','kyc-sending','kyc-otp','kyc-verifying','kyc-provisioning','kyc-done']
-    .forEach(id => hide(id));
+  ['kyc-form','kyc-sending','kyc-otp','kyc-verifying','kyc-provisioning','kyc-done'].forEach(id => hide(id));
   show(stage);
 }
-
 function sendCode() {
   state.kycPhone = el('kyc-phone') ? el('kyc-phone').value.trim() : state.kycPhone;
   kycShow('kyc-sending');
-  el('kyc-sending-to').textContent = 'Delivering to ' + state.kycPhone;
-
+  el('kyc-sending-to').textContent = 'Delivering to '+state.kycPhone;
   setTimeout(() => {
     kycShow('kyc-otp');
     el('otp-phone-label').textContent = state.kycPhone;
     clearOTP();
     startResendCountdown(30);
-    // show notification after brief delay
     setTimeout(() => el('notif-card').classList.add('visible'), 600);
   }, 1800);
 }
-
-// OTP helpers
-function getOTP() {
-  return [0,1,2,3,4,5].map(i => el('otp'+i).value).join('');
-}
+function getOTP() { return [0,1,2,3,4,5].map(i => el('otp'+i).value).join(''); }
 function clearOTP() {
-  [0,1,2,3,4,5].forEach(i => {
-    const d = el('otp'+i);
-    d.value = '';
-    d.className = 'otp-digit';
-  });
-  el('otp-msg').textContent = '';
-  el('otp-verify-btn').disabled = true;
-  el('notif-card').classList.remove('visible');
-  el('otp-wrap').classList.remove('otp-shake');
+  [0,1,2,3,4,5].forEach(i => { const d=el('otp'+i); d.value=''; d.className='otp-digit'; });
+  el('otp-msg').textContent=''; el('otp-verify-btn').disabled=true;
+  el('notif-card').classList.remove('visible'); el('otp-wrap').classList.remove('otp-shake');
 }
 function refreshOTPStyles() {
   [0,1,2,3,4,5].forEach(i => {
-    const d = el('otp'+i);
-    d.className = 'otp-digit' + (d.value ? ' filled' : '');
+    const d=el('otp'+i); d.className='otp-digit'+(d.value?' filled':'');
   });
-  const val = getOTP();
-  el('otp-verify-btn').disabled = val.length < 6;
-  // char count hint
-  if (val.length > 0 && val.length < 6) {
-    el('otp-msg').textContent = (6 - val.length) + ' digits remaining';
-    el('otp-msg').style.color = '#55556e';
-  } else if (val.length === 0) {
-    el('otp-msg').textContent = '';
-  }
+  const val=getOTP(); el('otp-verify-btn').disabled=val.length<6;
+  if (val.length>0&&val.length<6) { el('otp-msg').textContent=(6-val.length)+' digits remaining'; el('otp-msg').style.color='var(--text-muted)'; }
+  else if (val.length===0) el('otp-msg').textContent='';
 }
 function otpInput(i) {
-  const d = el('otp'+i);
-  d.value = d.value.replace(/\D/g,'').slice(-1);
+  const d=el('otp'+i); d.value=d.value.replace(/\D/g,'').slice(-1);
   refreshOTPStyles();
-  if (d.value && i < 5) el('otp'+(i+1)).focus();
-  // auto-verify
-  if (getOTP().length === 6) setTimeout(verifyCode, 120);
+  if (d.value && i<5) el('otp'+(i+1)).focus();
+  if (getOTP().length===6) setTimeout(verifyCode,120);
 }
-function otpKey(i, e) {
-  if (e.key === 'Backspace' && !el('otp'+i).value && i > 0) el('otp'+(i-1)).focus();
-}
+function otpKey(i,e) { if(e.key==='Backspace'&&!el('otp'+i).value&&i>0) el('otp'+(i-1)).focus(); }
 function otpPaste(e) {
-  const p = e.clipboardData.getData('text').replace(/\D/g,'').slice(0,6);
-  if (!p) return;
-  e.preventDefault();
-  p.split('').forEach((ch,i) => { if (i<6) el('otp'+i).value = ch; });
-  refreshOTPStyles();
-  if (p.length === 6) setTimeout(verifyCode, 120);
+  const p=e.clipboardData.getData('text').replace(/\D/g,'').slice(0,6); if(!p)return;
+  e.preventDefault(); p.split('').forEach((ch,i)=>{if(i<6)el('otp'+i).value=ch;});
+  refreshOTPStyles(); if(p.length===6) setTimeout(verifyCode,120);
 }
-
 function verifyCode() {
-  const val = getOTP();
-  if (val !== DEMO_CODE) {
-    [0,1,2,3,4,5].forEach(i => el('otp'+i).classList.add('error'));
+  if (getOTP()!==DEMO_CODE) {
+    [0,1,2,3,4,5].forEach(i=>el('otp'+i).classList.add('error'));
     el('otp-wrap').classList.add('otp-shake');
-    el('otp-msg').textContent = 'Incorrect code — try again';
-    el('otp-msg').style.color = '#e17055';
-    setTimeout(() => {
-      [0,1,2,3,4,5].forEach(i => {
-        const d = el('otp'+i);
-        d.classList.remove('error');
-        d.className = 'otp-digit' + (d.value ? ' filled' : '');
-      });
-      el('otp-wrap').classList.remove('otp-shake');
-    }, 1800);
+    el('otp-msg').textContent='Incorrect code — try again'; el('otp-msg').style.color='var(--error)';
+    setTimeout(()=>{ [0,1,2,3,4,5].forEach(i=>{const d=el('otp'+i);d.classList.remove('error');d.className='otp-digit'+(d.value?' filled':'');}); el('otp-wrap').classList.remove('otp-shake'); },1800);
     return;
   }
-  kycShow('kyc-verifying');
-  clearResendCountdown();
-  setTimeout(() => {
-    kycShow('kyc-provisioning');
-    setTimeout(() => {
-      state.provisionedNumber = genProvNum();
-      el('prov-num-kyc').textContent = state.provisionedNumber;
-      el('kyc-done-phone').textContent = state.kycPhone;
-      kycShow('kyc-done');
-    }, 1800);
-  }, 1600);
+  kycShow('kyc-verifying'); clearResendCountdown();
+  setTimeout(()=>{ kycShow('kyc-provisioning');
+    setTimeout(()=>{ state.provisionedNumber=genProvNum(); el('prov-num-kyc').textContent=state.provisionedNumber; el('kyc-done-phone').textContent=state.kycPhone; kycShow('kyc-done'); },1800);
+  },1600);
 }
-
-function startResendCountdown(n) {
-  state.resendCountdown = n;
-  el('resend-btn').disabled = true;
-  tickResend();
-}
+function startResendCountdown(n) { state.resendCountdown=n; el('resend-btn').disabled=true; tickResend(); }
 function tickResend() {
-  if (state.resendCountdown > 0) {
-    el('resend-btn').textContent = 'Resend in ' + state.resendCountdown + 's';
-    state.resendCountdown--;
-    state.resendTimer = setTimeout(tickResend, 1000);
-  } else {
-    el('resend-btn').textContent = 'Resend code';
-    el('resend-btn').disabled = false;
-  }
+  if (state.resendCountdown>0) { el('resend-btn').textContent='Resend in '+state.resendCountdown+'s'; state.resendCountdown--; state.resendTimer=setTimeout(tickResend,1000); }
+  else { el('resend-btn').textContent='Resend code'; el('resend-btn').disabled=false; }
 }
-function clearResendCountdown() {
-  clearTimeout(state.resendTimer);
-  state.resendCountdown = 0;
-}
+function clearResendCountdown() { clearTimeout(state.resendTimer); state.resendCountdown=0; }
 
-// ── Step 2: Credits ────────────────────────────────────
+// Step 2
 function initCreditsStep() {
-  el('credits-from-num').textContent = state.provisionedNumber;
-  el('credits-to-num').textContent   = state.kycPhone;
-  show('credits-display');
-  updateCredits();
+  el('credits-from-num').textContent=state.provisionedNumber;
+  el('credits-to-num').textContent=state.kycPhone;
+  show('credits-display'); updateCredits();
 }
-function updateCredits() {
-  el('credits-text').textContent = (10 - state.creditsUsed) + ' credits';
-}
+function updateCredits() { el('credits-text').textContent=(10-state.creditsUsed)+' credits'; }
 
-// ── Step 3: SMS ─────────────────────────────────────────
+// Step 3
 function initSMSStep() {
-  el('sms-from-num').textContent = state.provisionedNumber;
-  el('sms-to-num').textContent   = state.kycPhone;
-  smsCharCount();
-  renderCode();
+  el('sms-from-num').textContent=state.provisionedNumber;
+  el('sms-to-num').textContent=state.kycPhone;
+  smsCharCount(); renderCode();
 }
-
 function smsCharCount() {
-  const msg = el('sms-msg').value;
-  el('sms-charcount').textContent = msg.length + '/160 chars · 1 credit (~$0.01)';
+  const msg=el('sms-msg').value;
+  el('sms-charcount').textContent=msg.length+'/160 chars · 1 credit (~$0.01)';
   renderCode();
 }
-
-let codeOpen = false;
+let codeOpen=false;
 function toggleCode() {
-  codeOpen = !codeOpen;
-  el('code-block').className = 'code-block' + (codeOpen ? ' visible' : '');
-  el('code-arrow').textContent = codeOpen ? 'Hide ▲' : 'Show ▼';
+  codeOpen=!codeOpen;
+  el('code-block').className='code-block'+(codeOpen?' visible':'');
+  el('code-arrow').textContent=codeOpen?'Hide ▲':'Show ▼';
 }
-
 function renderCode() {
-  const from = (state.provisionedNumber || '+1 (415) 555-0100').replace(/\D/g,'');
-  const to   = (state.kycPhone || '+1 555 000 0000').replace(/\D/g,'');
-  const msg  = el('sms-msg') ? el('sms-msg').value : '';
-  el('code-block').textContent =
-`const rc = require('@ringcentral/sdk');
+  const from=(state.provisionedNumber||'+1 (415) 555-0100').replace(/\D/g,'');
+  const to=(state.kycPhone||'+1 555 000 0000').replace(/\D/g,'');
+  const msg=el('sms-msg')?el('sms-msg').value:'';
+  el('code-block').textContent=
+`const RingCentral = require('@ringcentral/sdk');
 
-const sdk = new rc.SDK({
-  clientId: 'YOUR_CLIENT_ID',
+const sdk = new RingCentral.SDK({
+  clientId:     'YOUR_CLIENT_ID',
   clientSecret: 'YOUR_CLIENT_SECRET',
-  server: rc.SDK.server.production
+  server:        RingCentral.SDK.server.production
 });
 
 await sdk.login({ jwt: 'YOUR_JWT_TOKEN' });
 
-// Provisioned number: ${state.provisionedNumber || '+1 (415) 555-0100'}
-// Permitted recipient: ${state.kycPhone || '+1 555 000 0000'}
+// Provisioned number: ${state.provisionedNumber||'+1 (415) 555-0100'}
+// Permitted recipient: ${state.kycPhone||'+1 555 000 0000'}
 
-const response = await sdk.platform()
+const resp = await sdk.platform()
   .post('/restapi/v1.0/account/~/extension/~/sms', {
     from: { phoneNumber: '+${from}' },
-    to: [{ phoneNumber: '+${to}' }],
+    to:   [{ phoneNumber: '+${to}' }],
     text: '${msg}'
   });
 
-console.log('Sent:', response.json().id);`;
+console.log('Sent! Message ID:', resp.json().id);`;
 }
-
 function sendSMS() {
-  const btn = el('send-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="animation:spin .8s linear infinite"><circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="2" stroke-opacity=".2"/><path d="M9 2a7 7 0 0 1 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Sending…';
-
-  setTimeout(() => {
-    state.creditsUsed++;
-    updateCredits();
-    const msg = el('sms-msg').value;
-    const now = new Date().toLocaleTimeString();
-    hide('sms-compose');
-    show('sms-sent');
-    const rid = randId();
-    el('sms-api-resp').textContent = 'API response: 200 OK · msg_demo_' + rid;
-    el('phone-time').textContent = state.provisionedNumber + ' · ' + now;
-    el('phone-msg').textContent  = msg;
-  }, 2000);
+  const btn=el('send-btn'); btn.disabled=true;
+  btn.innerHTML='<svg width="16" height="16" viewBox="0 0 18 18" fill="none" style="animation:spin .8s linear infinite"><circle cx="9" cy="9" r="7" stroke="white" stroke-width="2" stroke-opacity=".35"/><path d="M9 2a7 7 0 0 1 7 7" stroke="white" stroke-width="2" stroke-linecap="round"/></svg> Sending…';
+  setTimeout(()=>{
+    state.creditsUsed++; updateCredits();
+    const msg=el('sms-msg').value; const now=new Date().toLocaleTimeString();
+    hide('sms-compose'); show('sms-sent');
+    el('sms-api-resp').textContent='API response: 200 OK · msg_'+randId();
+    el('phone-time').textContent=state.provisionedNumber+' · '+now;
+    el('phone-msg').textContent=msg;
+  },2000);
 }
 
-// ── Reset ──────────────────────────────────────────────
 function reset() {
-  state = { step:0, creditsUsed:0, kycPhone:'', provisionedNumber:'', resendTimer:null, resendCountdown:0 };
+  state={step:0,creditsUsed:0,kycPhone:'',provisionedNumber:'',resendTimer:null,resendCountdown:0};
   clearResendCountdown();
-
-  // Reset steps visibility
-  for (let i=0;i<4;i++) { el('step'+i).classList.add('hidden'); el('step'+i).classList.remove('panel'); }
+  for(let i=0;i<4;i++){const s=el('step'+i);s.classList.add('hidden');s.classList.remove('panel');}
   el('step0').classList.remove('hidden'); el('step0').classList.add('panel');
-
-  // Reset signup
-  ['s0name','s0email','s0company','s0pw'].forEach(id => el(id).value='');
-  el('s0btn').disabled = true;
-
-  // Reset KYC
-  el('kyc-phone').value=''; el('kyc-usecase').value=''; el('kyc-country').value='US';
-  el('kyc-send-btn').disabled = true;
-  kycShow('kyc-form');
-  clearOTP();
-  el('notif-card').classList.remove('visible');
-
-  // Reset SMS step
-  el('sms-msg').value = 'Hello from my first CPaaS app! 🚀';
-  el('send-btn').disabled = false;
-  el('send-btn').textContent = 'Send SMS →';
+  ['s0name','s0email','s0company','s0pw'].forEach(id=>el(id).value='');
+  el('s0btn').disabled=true;
+  el('kyc-phone').value=''; el('kyc-usecase').value=''; el('kyc-send-btn').disabled=true;
+  kycShow('kyc-form'); clearOTP(); el('notif-card').classList.remove('visible');
+  el('sms-msg').value='Hello from my first RingCentral app! 🚀';
+  el('send-btn').disabled=false; el('send-btn').textContent='Send SMS →';
   hide('sms-sent'); show('sms-compose');
-  codeOpen = false;
-  el('code-block').className = 'code-block';
-  el('code-arrow').textContent = 'Show ▼';
-
-  // Header
-  hide('credits-display');
-  el('restart-btn').style.display = 'none';
-
+  codeOpen=false; el('code-block').className='code-block'; el('code-arrow').textContent='Show ▼';
+  hide('credits-display'); el('restart-btn').style.display='none';
   updateStepper();
 }
 
-// ── Init ───────────────────────────────────────────────
 updateStepper();
 </script>
 </body>
