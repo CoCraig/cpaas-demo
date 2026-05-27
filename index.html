@@ -3,365 +3,520 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>RingCentral CPaaS — Onboarding Demo</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<title>CPaaS — Getting Started</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: #f5f7fa;
-    color: #1a1f36;
-    font-family: 'Inter', 'Helvetica Neue', sans-serif;
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-  }
+/* ── Spring Design Tokens ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* ── Brand tokens ── */
-  :root {
-    --rc-blue:       #0684BC;
-    --rc-blue-dark:  #045f8a;
-    --rc-blue-light: #e6f4fb;
-    --rc-blue-mid:   #cce8f5;
-    --rc-orange:     #FF7A00;
-    --rc-orange-light: #fff3e6;
-    --rc-orange-mid:   #ffe0b3;
-    --text-primary:  #1a1f36;
-    --text-secondary:#4f566b;
-    --text-muted:    #8792a2;
-    --border:        #e3e8ef;
-    --border-mid:    #c8d0da;
-    --surface:       #ffffff;
-    --surface-2:     #f5f7fa;
-    --surface-3:     #eef2f7;
-    --success:       #00875a;
-    --success-light: #e3f5ee;
-    --success-mid:   #b3e6d0;
-    --error:         #df1b41;
-    --error-light:   #fde8ec;
-  }
+:root {
+  color-scheme: light;
+  --sui-font-family: Inter, Helvetica, Arial, sans-serif;
+  --sui-text: rgba(0, 0, 0, 1);
+  --sui-text-strong: rgba(50, 52, 57, 1);
+  --sui-text-muted: rgba(114, 117, 122, 1);
+  --sui-text-disabled: rgba(158, 159, 164, 1);
+  --sui-canvas: rgba(255, 255, 255, 1);
+  --sui-surface: rgba(255, 255, 255, 1);
+  --sui-surface-muted: rgba(245, 246, 249, 1);
+  --sui-border: rgba(221, 223, 229, 1);
+  --sui-border-soft: rgba(0, 0, 0, 0.1);
+  --sui-border-mid: rgba(0, 0, 0, 0.2);
+  --sui-border-mid-hover: rgba(0, 0, 0, 0.3);
+  --sui-border-strong: rgba(0, 0, 0, 0.5);
+  --sui-neutral-soft: rgba(0, 0, 0, 0.08);
+  --sui-neutral-soft-hover: rgba(0, 0, 0, 0.12);
+  --sui-neutral-soft-active: rgba(0, 0, 0, 0.18);
+  --sui-primary: rgba(0, 64, 221, 1);
+  --sui-primary-strong: rgba(2, 38, 133, 1);
+  --sui-primary-soft: rgba(0, 64, 221, 0.1);
+  --sui-danger: rgba(234, 26, 26, 1);
+  --sui-danger-text: rgba(187, 21, 21, 1);
+  --sui-danger-strong: rgba(140, 15, 15, 1);
+  --sui-danger-soft: rgba(234, 26, 26, 0.1);
+  --sui-warning: rgba(255, 102, 0, 1);
+  --sui-warning-text: rgba(204, 82, 0, 1);
+  --sui-warning-strong: rgba(153, 61, 0, 1);
+  --sui-warning-soft: rgba(255, 102, 0, 0.1);
+  --sui-success: rgba(22, 169, 55, 1);
+  --sui-success-text: rgba(18, 135, 44, 1);
+  --sui-success-strong: rgba(10, 100, 29, 1);
+  --sui-success-soft: rgba(22, 169, 55, 0.1);
+  --sui-radius-xs: 0.25rem;
+  --sui-radius-sm: 0.625rem;
+  --sui-radius-md: 0.875rem;
+  --sui-radius-lg: 1rem;
+  --sui-radius-full: 9999px;
+  --sui-shadow-xs: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  --sui-shadow-sm: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+  --sui-shadow-md: 0 10px 20px -10px rgba(0, 0, 0, 0.2);
+  --sui-focus-color: rgba(2, 38, 133, 1);
+  --sui-transition-fast: 0.1618s cubic-bezier(0.382, 0, 0.786, 1);
+  --sui-transition-slow: 0.382s cubic-bezier(0.3, 0, 0.75, 0.65);
+}
 
-  @keyframes spin     { to { transform: rotate(360deg); } }
-  @keyframes fadeUp   { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-  @keyframes pulse    { 0%,100%{opacity:1} 50%{opacity:.4} }
-  @keyframes checkPop { 0%{transform:scale(0)} 70%{transform:scale(1.2)} 100%{transform:scale(1)} }
-  @keyframes slideIn  { from{opacity:0;transform:translateX(16px)} to{opacity:1;transform:translateX(0)} }
-  @keyframes shake    { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)} 40%{transform:translateX(5px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
+@keyframes spin    { to { transform: rotate(360deg); } }
+@keyframes fadeUp  { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+@keyframes pulse   { 0%,100%{opacity:1} 50%{opacity:.4} }
+@keyframes checkPop{ 0%{transform:scale(0)} 70%{transform:scale(1.2)} 100%{transform:scale(1)} }
+@keyframes slideIn { from{opacity:0;transform:translateX(14px)} to{opacity:1;transform:translateX(0)} }
+@keyframes shake   { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)} 40%{transform:translateX(5px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
 
-  /* ── Layout ── */
-  #app { display: flex; flex-direction: column; min-height: 100vh; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 
-  /* ── Header ── */
-  #header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 0 28px;
-    height: 56px;
-    display: flex; align-items: center; justify-content: space-between;
-    position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 1px 3px rgba(0,0,0,.06);
-  }
-  .header-left  { display:flex; align-items:center; gap:10px; }
-  .header-right { display:flex; align-items:center; gap:10px; }
-  .logo-icon {
-    width:30px; height:30px; border-radius:6px;
-    background: linear-gradient(135deg, var(--rc-blue), var(--rc-blue-dark));
-    display:flex; align-items:center; justify-content:center; font-size:15px;
-  }
-  .logo-name  { font-size:15px; font-weight:700; color:var(--text-primary); letter-spacing:-.01em; }
-  .demo-badge {
-    font-size:10px; font-weight:600; padding:2px 8px;
-    background: var(--rc-blue-light); border:1px solid var(--rc-blue-mid);
-    border-radius:100px; color:var(--rc-blue); letter-spacing:.05em;
-  }
-  .credits-info { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-secondary); }
-  .status-dot { width:7px; height:7px; border-radius:50%; background:var(--success); display:inline-block; animation:pulse 2s ease-in-out infinite; }
-  #restart-btn {
-    background:var(--surface-3); border:1px solid var(--border);
-    border-radius:6px; padding:6px 12px; color:var(--text-secondary);
-    font-size:12px; font-weight:500; cursor:pointer;
-    font-family:'Inter',sans-serif; display:none; transition:all .15s;
-  }
-  #restart-btn:hover { border-color:var(--rc-blue); color:var(--rc-blue); background:var(--rc-blue-light); }
+:focus-visible {
+  outline: 2px solid var(--sui-focus-color);
+  outline-offset: 2px;
+}
 
-  /* ── Main ── */
-  #main { padding: 32px 24px 60px; max-width: 580px; margin: 0 auto; width: 100%; }
+/* ── Page ── */
+body {
+  min-height: 100vh;
+  background: var(--sui-canvas);
+  color: var(--sui-text);
+  font-family: var(--sui-font-family);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.25rem;
+  -webkit-font-smoothing: antialiased;
+}
+#app { display: flex; flex-direction: column; min-height: 100vh; }
 
-  /* ── Stepper ── */
-  #stepper { display:flex; align-items:center; margin-bottom:36px; }
-  .step-item { display:flex; flex-direction:column; align-items:center; gap:5px; }
-  .step-connector { flex:1; height:2px; margin:0 6px; margin-bottom:18px; background:var(--border); transition:background .4s; border-radius:2px; }
-  .step-connector.done { background: var(--rc-blue); }
-  .step-circle {
-    width:30px; height:30px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    font-size:12px; font-weight:600; color:var(--text-muted);
-    background:var(--surface-3); border:2px solid var(--border); transition:all .3s;
-  }
-  .step-circle.active { background:var(--rc-blue); color:#fff; border-color:var(--rc-blue); box-shadow:0 0 0 3px rgba(6,132,188,.15); }
-  .step-circle.done   { background:var(--rc-blue); color:#fff; border-color:var(--rc-blue); animation:checkPop .4s ease; }
-  .step-label { font-size:10px; font-weight:500; white-space:nowrap; color:var(--text-muted); letter-spacing:.02em; }
-  .step-label.active { color:var(--rc-blue); font-weight:600; }
-  .step-label.done   { color:var(--rc-blue); }
+/* ── Header ── */
+#header {
+  border-bottom: 1px solid var(--sui-border);
+  padding: 0 24px;
+  height: 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--sui-surface);
+  position: sticky; top: 0; z-index: 100;
+}
+.header-left  { display:flex; align-items:center; gap:8px; }
+.header-right { display:flex; align-items:center; gap:8px; }
+.logo-icon {
+  width:28px; height:28px; border-radius:var(--sui-radius-xs);
+  background: var(--sui-primary);
+  display:flex; align-items:center; justify-content:center; font-size:13px; color:#fff;
+}
+.logo-name {
+  font-size: 0.9375rem; font-weight: 600; letter-spacing: -0.2px;
+  color: var(--sui-text-strong);
+}
+.demo-badge {
+  font-size: 0.625rem; font-weight: 600; padding: 2px 6px;
+  background: var(--sui-primary-soft);
+  border-radius: var(--sui-radius-full);
+  color: var(--sui-primary);
+  letter-spacing: 0.05em; text-transform: uppercase;
+}
+.credits-info { display:flex; align-items:center; gap:6px; font-size:0.75rem; color: var(--sui-text-muted); }
+.status-dot { width:6px; height:6px; border-radius:50%; background: var(--sui-success); display:inline-block; animation:pulse 2s ease-in-out infinite; }
 
-  /* ── Panel ── */
-  .panel { animation: fadeUp .3s ease forwards; }
-  h1.title { font-size:24px; font-weight:700; margin-bottom:6px; letter-spacing:-.02em; color:var(--text-primary); }
-  p.subtitle { font-size:14px; color:var(--text-secondary); margin-bottom:24px; line-height:1.6; }
+#restart-btn {
+  background: var(--sui-surface);
+  border: 1px solid var(--sui-border-mid);
+  border-radius: var(--sui-radius-sm);
+  padding: 4px 10px;
+  color: var(--sui-text-muted);
+  font-size: 0.75rem; font-weight: 500;
+  cursor: pointer; font-family: var(--sui-font-family);
+  display: none;
+  transition: background var(--sui-transition-fast), border-color var(--sui-transition-fast), color var(--sui-transition-fast);
+}
+#restart-btn:hover { color: var(--sui-primary-strong); border-color: var(--sui-border-mid-hover); background: var(--sui-surface-muted); }
 
-  /* ── Form ── */
-  .field-row { display:flex; gap:12px; }
-  .field-row .field { flex:1; }
-  .field { margin-bottom:14px; }
-  .field label { font-size:12px; font-weight:500; color:var(--text-secondary); display:block; margin-bottom:5px; }
-  .inp, .sel, .tarea {
-    width:100%; background:var(--surface); border:1.5px solid var(--border);
-    border-radius:8px; padding:10px 13px; color:var(--text-primary);
-    font-family:'Inter',sans-serif; font-size:14px;
-    outline:none; transition:border-color .15s, box-shadow .15s;
-  }
-  .inp:focus, .sel:focus, .tarea:focus {
-    border-color:var(--rc-blue);
-    box-shadow:0 0 0 3px rgba(6,132,188,.12);
-  }
-  .inp::placeholder, .tarea::placeholder { color:var(--text-muted); }
-  .sel { appearance:none; cursor:pointer; }
-  .tarea { resize:none; }
-  .field-hint { font-size:11px; color:var(--text-muted); margin-top:5px; }
+/* ── Main ── */
+#main { padding: 32px 24px 64px; max-width: 560px; margin: 0 auto; width: 100%; }
 
-  /* ── Buttons ── */
-  .btn-primary {
-    width:100%; background:var(--rc-blue); color:#fff;
-    border:none; border-radius:8px; padding:12px;
-    font-size:14px; font-weight:600; cursor:pointer;
-    font-family:'Inter',sans-serif; letter-spacing:.01em;
-    transition:background .15s, transform .1s, box-shadow .15s;
-    display:flex; align-items:center; justify-content:center; gap:8px;
-  }
-  .btn-primary:hover:not(:disabled) { background:var(--rc-blue-dark); box-shadow:0 2px 8px rgba(6,132,188,.3); transform:translateY(-1px); }
-  .btn-primary:active:not(:disabled) { transform:translateY(0); }
-  .btn-primary:disabled { background:#b3cfe8; cursor:not-allowed; }
-  .btn-ghost {
-    background:none; border:none; color:var(--rc-blue);
-    font-family:'Inter',sans-serif; font-size:13px;
-    cursor:pointer; text-decoration:underline; padding:0; font-weight:500;
-  }
-  .btn-ghost:disabled { color:var(--text-muted); cursor:not-allowed; text-decoration:none; }
-  .btn-toggle {
-    width:100%; background:var(--surface-3); border:1.5px solid var(--border);
-    border-radius:8px; padding:10px 14px; color:var(--text-secondary); font-size:13px; font-weight:500;
-    cursor:pointer; margin-bottom:14px; font-family:'Inter',sans-serif;
-    display:flex; justify-content:space-between; align-items:center; transition:all .15s;
-  }
-  .btn-toggle:hover { border-color:var(--rc-blue); color:var(--rc-blue); background:var(--rc-blue-light); }
-  .btn-toggle .arrow { color:var(--rc-blue); font-size:11px; }
+/* ── Stepper ── */
+#stepper { display:flex; align-items:center; margin-bottom:32px; }
+.step-item { display:flex; flex-direction:column; align-items:center; gap:4px; }
+.step-connector {
+  flex:1; height:1px; margin: 0 4px; margin-bottom: 20px;
+  background: var(--sui-border); transition: background .4s;
+}
+.step-connector.done { background: var(--sui-success); }
+.step-circle {
+  width:28px; height:28px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:600; color: var(--sui-text-disabled);
+  background: var(--sui-surface-muted);
+  border: 1px solid var(--sui-border);
+  transition: all .25s;
+}
+.step-circle.active {
+  background: var(--sui-primary); color: #fff; border-color: var(--sui-primary);
+  box-shadow: 0 0 0 3px var(--sui-primary-soft);
+}
+.step-circle.done {
+  background: var(--sui-success); color: #fff; border-color: var(--sui-success);
+  animation: checkPop .35s ease;
+}
+.step-label { font-size:0.625rem; font-weight:500; white-space:nowrap; color: var(--sui-text-disabled); letter-spacing:.02em; }
+.step-label.active { color: var(--sui-primary); font-weight: 600; }
+.step-label.done   { color: var(--sui-success-text); }
 
-  /* ── Cards / boxes ── */
-  .card {
-    background:var(--surface); border:1.5px solid var(--border);
-    border-radius:12px; padding:16px;
-  }
-  .info-notice {
-    background:var(--rc-blue-light); border:1.5px solid var(--rc-blue-mid);
-    border-radius:10px; padding:12px 14px; margin-bottom:16px;
-    display:flex; gap:10px; align-items:flex-start; font-size:12px; color:var(--rc-blue-dark); line-height:1.5;
-  }
-  .warn-notice {
-    background:var(--rc-orange-light); border:1.5px solid var(--rc-orange-mid);
-    border-radius:10px; padding:12px 14px; margin-bottom:16px;
-    display:flex; gap:10px; align-items:flex-start; font-size:12px; color:#7a3a00; line-height:1.5;
-  }
-  .warn-notice strong { color:var(--rc-orange); }
-  .success-box {
-    background:var(--success-light); border:1.5px solid var(--success-mid);
-    border-radius:12px; padding:24px; margin-bottom:16px; text-align:center;
-  }
-  .success-box .emoji { font-size:36px; margin-bottom:8px; }
-  .success-box .stitle { font-weight:700; font-size:17px; color:var(--success); margin-bottom:4px; }
-  .success-box .ssub   { font-size:13px; color:var(--text-secondary); }
+/* ── Panel ── */
+.panel { animation: fadeUp .3s ease forwards; }
 
-  /* ── Credits card ── */
-  .credits-card {
-    background: linear-gradient(135deg, var(--rc-blue) 0%, var(--rc-blue-dark) 100%);
-    border-radius:14px; padding:22px; margin-bottom:18px; color:#fff;
-  }
-  .credits-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; }
-  .credits-lbl { font-size:11px; opacity:.8; margin-bottom:4px; letter-spacing:.06em; font-weight:500; }
-  .credits-amt { font-size:36px; font-weight:700; letter-spacing:-.03em; line-height:1; }
-  .credits-icon { background:rgba(255,255,255,.15); border-radius:8px; padding:8px; display:flex; align-items:center; }
-  .pill-row { display:flex; gap:6px; flex-wrap:wrap; }
-  .white-pill {
-    background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.3);
-    border-radius:100px; padding:3px 10px; font-size:11px; font-weight:600; color:#fff;
-  }
+/* ── Typography in panels ── */
+h1.title {
+  font-size: 1.25rem; font-weight: 600; letter-spacing: -0.2px;
+  line-height: 1.75rem; color: var(--sui-text-strong); margin-bottom: 4px;
+}
+p.subtitle {
+  font-size: 0.875rem; color: var(--sui-text-muted); margin-bottom: 24px; line-height: 1.5;
+}
 
-  /* ── Feature rows ── */
-  .feature-list { display:flex; flex-direction:column; gap:8px; margin-bottom:22px; }
-  .feature-item {
-    display:flex; gap:12px; padding:12px 14px;
-    background:var(--surface); border-radius:9px; border:1.5px solid var(--border);
-    transition:border-color .15s;
-  }
-  .feature-item:hover { border-color:var(--rc-blue-mid); }
-  .feature-icon { font-size:18px; flex-shrink:0; }
-  .feature-title { font-weight:600; font-size:13px; margin-bottom:2px; color:var(--text-primary); }
-  .feature-desc  { font-size:12px; color:var(--text-muted); }
+/* ── Form fields ── */
+.field-row { display:flex; gap:12px; }
+.field-row .field { flex:1; }
+.field { margin-bottom: 12px; }
+.field > label {
+  display: block; margin-bottom: 4px;
+  font-size: 0.75rem; font-weight: 500; line-height: 1.0625rem;
+  color: var(--sui-text);
+}
+.field-hint {
+  font-size: 0.75rem; font-weight: 400; line-height: 1.125rem;
+  color: var(--sui-text-muted); margin-top: 4px;
+}
 
-  /* ── Number / provisioned ── */
-  .num-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-  .num-label { font-size:10px; color:var(--text-muted); margin-bottom:6px; letter-spacing:.05em; font-weight:600; text-transform:uppercase; }
-  .prov-badge {
-    display:inline-flex; align-items:center; gap:5px;
-    background:var(--rc-blue-light); border:1.5px solid var(--rc-blue-mid);
-    border-radius:7px; padding:5px 10px; font-size:13px;
-    font-family:'JetBrains Mono',monospace; color:var(--rc-blue); font-weight:500;
-  }
-  .prov-badge .hash { color:var(--rc-orange); font-weight:700; }
-  .lock-pill {
-    display:inline-flex; align-items:center; gap:5px;
-    background:var(--rc-orange-light); border:1.5px solid var(--rc-orange-mid);
-    border-radius:7px; padding:5px 10px; font-size:12px; color:#7a3a00; font-weight:500;
-    font-family:'JetBrains Mono',monospace;
-  }
+/* ── Inputs ── */
+.inp, .sel, .tarea {
+  width: 100%;
+  min-height: 40px;
+  background: var(--sui-surface);
+  border: 1px solid var(--sui-border-soft);
+  border-radius: var(--sui-radius-sm);
+  padding: 0 12px;
+  color: var(--sui-text);
+  font-family: var(--sui-font-family);
+  font-size: 0.875rem; font-weight: 400; line-height: 1.25rem;
+  outline: none;
+  transition: background var(--sui-transition-fast), border-color var(--sui-transition-fast);
+  display: block;
+}
+.tarea { padding: 10px 12px; min-height: 72px; resize: none; }
+.inp:hover, .sel:hover, .tarea:hover {
+  background: var(--sui-surface-muted);
+  border-color: var(--sui-text-muted);
+}
+.inp:focus, .sel:focus, .tarea:focus {
+  border-color: var(--sui-primary);
+  box-shadow: 0 0 0 2px var(--sui-primary-soft);
+}
+.inp::placeholder, .tarea::placeholder { color: var(--sui-text-disabled); }
+.sel { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 32 32'%3E%3Cpath fill='%23727577' d='M16 22l-9.341-9.4 1.701-1.699 7.64 7.638 7.64-7.64 1.701 1.701z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
 
-  /* ── OTP ── */
-  #otp-wrap { display:flex; gap:8px; justify-content:center; }
-  .otp-digit {
-    width:44px; height:52px; text-align:center;
-    font-size:22px; font-weight:700; font-family:'JetBrains Mono',monospace;
-    background:var(--surface); border:2px solid var(--border);
-    border-radius:10px; color:var(--text-primary); outline:none;
-    transition:all .15s; caret-color:transparent;
-  }
-  .otp-digit.filled { background:var(--rc-blue-light); border-color:var(--rc-blue); color:var(--rc-blue); }
-  .otp-digit.error  { border-color:var(--error); background:var(--error-light); }
-  .otp-digit:focus  { border-color:var(--rc-blue); box-shadow:0 0 0 3px rgba(6,132,188,.12); }
-  #otp-box { background:var(--surface-3); border:1.5px solid var(--border); border-radius:12px; padding:20px; margin-bottom:20px; }
-  #otp-box h3 { font-size:13px; font-weight:600; text-align:center; margin-bottom:16px; color:var(--text-secondary); }
-  #otp-msg  { text-align:center; font-size:12px; margin-top:10px; min-height:18px; }
-  .otp-shake { animation: shake .4s ease; }
-  #resend-row { text-align:center; margin-bottom:16px; font-size:12px; color:var(--text-muted); }
+/* ── Buttons ── */
+.btn-primary {
+  width: 100%; min-height: 40px;
+  background: var(--sui-primary); color: #fff;
+  border: 1px solid transparent; border-radius: var(--sui-radius-sm);
+  padding: 0 16px;
+  font-size: 0.9375rem; font-weight: 500; line-height: 1.25rem;
+  cursor: pointer; font-family: var(--sui-font-family);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: background var(--sui-transition-fast);
+}
+.btn-primary:hover:not(:disabled) { background: var(--sui-primary-strong); }
+.btn-primary:active:not(:disabled) { background: var(--sui-text); }
+.btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
 
-  /* ── Phone notification ── */
-  #notif-wrap { margin:0 auto 24px; width:280px; }
-  #notif-card {
-    background:var(--surface); border:1.5px solid var(--border); border-radius:16px; padding:12px 14px;
-    box-shadow:0 4px 16px rgba(0,0,0,.1); display:flex; gap:10px; align-items:flex-start;
-    opacity:0; transform:translateY(-8px); transition:opacity .4s ease, transform .4s ease;
-  }
-  #notif-card.visible { opacity:1; transform:translateY(0); }
-  .notif-icon {
-    width:36px; height:36px; border-radius:9px; flex-shrink:0;
-    background:linear-gradient(135deg,var(--rc-blue),var(--rc-blue-dark));
-    display:flex; align-items:center; justify-content:center; font-size:17px;
-  }
-  .notif-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:3px; }
-  .notif-app  { font-size:12px; font-weight:600; color:var(--text-primary); }
-  .notif-time { font-size:11px; color:var(--text-muted); }
-  .notif-body { font-size:12px; color:var(--text-secondary); line-height:1.5; }
-  .notif-code { color:var(--rc-blue); font-weight:700; font-family:'JetBrains Mono',monospace; letter-spacing:.1em; }
+.btn-ghost {
+  background: none; border: none; color: var(--sui-primary);
+  font-family: var(--sui-font-family); font-size: 0.75rem; font-weight: 500;
+  cursor: pointer; padding: 0;
+  transition: color var(--sui-transition-fast);
+}
+.btn-ghost:hover { color: var(--sui-primary-strong); }
+.btn-ghost:disabled { color: var(--sui-text-disabled); cursor: not-allowed; }
 
-  /* ── Spinner ── */
-  .spinner-wrap { padding:44px 0; text-align:center; }
-  .spinner-ring { position:relative; width:56px; height:56px; margin:0 auto 16px; }
-  .spinner-ring .track { position:absolute; inset:0; border-radius:50%; border:2.5px solid var(--border); }
-  .spinner-ring .fill  { position:absolute; inset:0; border-radius:50%; border:2.5px solid transparent; animation:spin .9s linear infinite; }
-  .spinner-ring .fill.blue   { border-top-color:var(--rc-blue); }
-  .spinner-ring .fill.green  { border-top-color:var(--success); }
-  .spinner-ring .fill.orange { border-top-color:var(--rc-orange); }
-  .spinner-ring .icon  { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:21px; }
-  .spinner-title { font-weight:600; font-size:15px; color:var(--text-primary); margin-bottom:4px; }
-  .spinner-sub   { font-size:13px; color:var(--text-secondary); }
+.btn-toggle {
+  width: 100%; min-height: 36px;
+  background: var(--sui-surface);
+  border: 1px solid var(--sui-border); border-radius: var(--sui-radius-sm);
+  padding: 0 12px; color: var(--sui-text-muted);
+  font-size: 0.875rem; font-weight: 500;
+  cursor: pointer; margin-bottom: 12px; font-family: var(--sui-font-family);
+  display: flex; justify-content: space-between; align-items: center;
+  transition: background var(--sui-transition-fast), border-color var(--sui-transition-fast), color var(--sui-transition-fast);
+}
+.btn-toggle:hover { background: var(--sui-surface-muted); border-color: var(--sui-border-mid); color: var(--sui-text); }
+.btn-toggle .arrow { color: var(--sui-primary); font-size: 0.6875rem; }
 
-  /* ── Code block ── */
-  .code-block {
-    background:#f0f4f8; border:1.5px solid var(--border); border-radius:10px; padding:16px;
-    font-family:'JetBrains Mono',monospace; font-size:11.5px; line-height:1.75;
-    color:#334155; overflow-x:auto; white-space:pre; margin-bottom:14px; display:none;
-  }
-  .code-block.visible { display:block; animation:fadeUp .2s ease forwards; }
+/* ── Alert / info boxes ── */
+.info-box {
+  background: var(--sui-surface-muted);
+  border: 1px solid var(--sui-border);
+  border-radius: var(--sui-radius-sm);
+  padding: 12px 14px; margin-bottom: 12px;
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 0.75rem; color: var(--sui-text-muted); line-height: 1.5;
+}
+.warn-box {
+  background: var(--sui-warning-soft);
+  border: 1px solid rgba(255, 102, 0, 0.22);
+  border-radius: var(--sui-radius-sm);
+  padding: 12px 14px; margin-bottom: 16px;
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 0.75rem; color: var(--sui-warning-strong); line-height: 1.5;
+}
+.warn-box strong { font-weight: 600; }
+.success-box {
+  background: var(--sui-success-soft);
+  border: 1px solid rgba(22, 169, 55, 0.2);
+  border-radius: var(--sui-radius-sm);
+  padding: 20px; margin-bottom: 16px; text-align: center;
+}
+.success-box .emoji { font-size: 28px; margin-bottom: 6px; }
+.success-box .title { font-weight: 700; font-size: 0.9375rem; color: var(--sui-success-strong); margin-bottom: 2px; }
+.success-box .sub   { font-size: 0.75rem; color: var(--sui-success-text); }
 
-  /* ── Phone mockup ── */
-  .phone-wrap { display:flex; justify-content:center; margin-bottom:20px; }
-  .phone-body {
-    width:220px; background:#1a1f36; border-radius:24px;
-    padding:18px 14px; box-shadow:0 12px 40px rgba(0,0,0,.15);
-  }
-  .phone-notch { width:48px; height:5px; border-radius:3px; background:#2d3452; margin:0 auto 14px; }
-  .phone-time  { font-size:10px; color:#5a6480; text-align:center; margin-bottom:8px; font-family:'JetBrains Mono',monospace; }
-  .sms-bubble {
-    background:linear-gradient(135deg,var(--rc-blue),var(--rc-blue-dark));
-    border-radius:16px 16px 3px 16px; padding:10px 14px; max-width:190px;
-    font-size:13px; line-height:1.5; color:#fff; margin-left:auto;
-    animation:slideIn .4s ease forwards;
-  }
+/* ── Credits card ── */
+.credits-card {
+  background: var(--sui-primary-soft);
+  border: 1px solid rgba(0, 64, 221, 0.2);
+  border-radius: var(--sui-radius-md);
+  padding: 20px; margin-bottom: 16px;
+}
+.credits-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; }
+.credits-label {
+  font-size: 0.625rem; font-weight: 600; color: var(--sui-primary);
+  margin-bottom: 3px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+.credits-amount {
+  font-size: 2rem; font-weight: 700; letter-spacing: -0.03em;
+  line-height: 1; color: var(--sui-primary-strong);
+}
+.credits-icon {
+  background: rgba(0, 64, 221, 0.1); border: 1px solid rgba(0,64,221,0.15);
+  border-radius: var(--sui-radius-sm); padding: 8px; color: var(--sui-primary);
+  display: flex; align-items: center; justify-content: center;
+}
+.pill-row { display:flex; gap:6px; flex-wrap:wrap; }
+.green-pill {
+  background: var(--sui-success-soft);
+  border: 1px solid rgba(22, 169, 55, 0.2);
+  border-radius: var(--sui-radius-full);
+  padding: 3px 10px; font-size: 0.625rem; font-weight: 600; color: var(--sui-success-strong);
+}
 
-  /* ── What happened list ── */
-  .what-list { display:flex; flex-direction:column; gap:7px; }
-  .what-item { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-secondary); }
-  .what-item .chk { color:var(--success); font-weight:700; }
+/* ── Feature rows ── */
+.feature-list { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+.feature-item {
+  display:flex; gap:12px; padding:12px 14px;
+  background: var(--sui-surface); border-radius: var(--sui-radius-sm);
+  border: 1px solid var(--sui-border);
+}
+.feature-icon { font-size: 16px; flex-shrink: 0; }
+.feature-title { font-weight: 600; font-size: 0.875rem; margin-bottom: 2px; color: var(--sui-text-strong); }
+.feature-desc  { font-size: 0.75rem; color: var(--sui-text-muted); }
 
-  /* ── Next steps ── */
-  .next-steps { display:flex; flex-direction:column; gap:6px; }
-  .next-item {
-    display:flex; justify-content:space-between; align-items:center;
-    padding:10px 12px; background:var(--surface); border-radius:8px;
-    font-size:13px; color:var(--text-secondary); border:1.5px solid var(--border);
-    cursor:pointer; transition:all .15s;
-  }
-  .next-item:hover { border-color:var(--rc-blue); color:var(--rc-blue); background:var(--rc-blue-light); }
-  .next-item .arrow { color:var(--rc-blue); font-weight:600; }
+/* ── Number / provisioned ── */
+.num-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.num-label {
+  font-size: 0.625rem; font-weight: 600; color: var(--sui-text-muted);
+  margin-bottom: 6px; letter-spacing: .04em; text-transform: uppercase;
+}
+.prov-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--sui-primary-soft);
+  border: 1px solid rgba(0, 64, 221, 0.25);
+  border-radius: var(--sui-radius-sm);
+  padding: 5px 10px; font-size: 0.8125rem;
+  font-family: 'Courier New', monospace; color: var(--sui-primary-strong); font-weight: 600;
+}
+.prov-badge .hash { color: var(--sui-primary); }
+.lock-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--sui-surface-muted); border: 1px solid var(--sui-border);
+  border-radius: var(--sui-radius-full); padding: 3px 10px;
+  font-size: 0.75rem; color: var(--sui-text-muted); font-weight: 500;
+  font-family: 'Courier New', monospace;
+}
 
-  /* ── Checklist rows ── */
-  .check-rows { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
-  .check-row {
-    display:flex; justify-content:space-between; align-items:center;
-    padding:10px 14px; background:var(--surface); border-radius:8px; border:1.5px solid var(--border);
-    font-size:13px;
-  }
-  .check-row .lbl { color:var(--text-secondary); }
-  .check-row .val { font-size:12px; color:var(--success); font-weight:600; }
+/* ── OTP ── */
+#otp-wrap { display:flex; gap:8px; justify-content:center; }
+.otp-digit {
+  width: 44px; height: 52px; text-align: center;
+  font-size: 1.25rem; font-weight: 700;
+  background: var(--sui-surface);
+  border: 1px solid var(--sui-border);
+  border-radius: var(--sui-radius-sm);
+  color: var(--sui-text); outline: none;
+  transition: all .15s; caret-color: transparent;
+}
+.otp-digit.filled { background: var(--sui-primary-soft); border-color: var(--sui-primary); }
+.otp-digit.error  { border-color: var(--sui-danger-text); background: var(--sui-danger-soft); }
+.otp-digit:focus  { border-color: var(--sui-primary); box-shadow: 0 0 0 2px var(--sui-primary-soft); }
+#otp-box {
+  background: var(--sui-surface-muted); border: 1px solid var(--sui-border);
+  border-radius: var(--sui-radius-md); padding: 20px; margin-bottom: 16px;
+}
+#otp-box h3 {
+  font-size: 0.8125rem; font-weight: 600; text-align: center;
+  margin-bottom: 16px; color: var(--sui-text-muted);
+}
+#otp-msg  { text-align:center; font-size:0.75rem; margin-top:8px; min-height:18px; color: var(--sui-text-muted); }
+.otp-shake { animation: shake .4s ease; }
+#resend-row { text-align:center; margin-bottom:14px; font-size:0.75rem; color: var(--sui-text-muted); }
 
-  /* ── Utility ── */
-  .hidden { display:none !important; }
-  .mt8  { margin-top:8px; }
-  .mt14 { margin-top:14px; }
-  .mb8  { margin-bottom:8px; }
-  .mb14 { margin-bottom:14px; }
-  .mb16 { margin-bottom:16px; }
-  .mb20 { margin-bottom:20px; }
-  .mb24 { margin-bottom:24px; }
-  .center { text-align:center; }
-  .mono { font-family:'JetBrains Mono',monospace; font-size:12px; }
-  .small { font-size:11px; color:var(--text-muted); }
-  .tos { font-size:11px; color:var(--text-muted); margin-top:12px; text-align:center; }
-  .section-label { font-size:10px; font-weight:600; color:var(--text-muted); letter-spacing:.06em; text-transform:uppercase; margin-bottom:8px; }
-  .divider { height:1px; background:var(--border); margin:20px 0; }
-  .prov-reveal-box {
-    background:var(--surface); border:1.5px solid var(--rc-blue-mid);
-    border-radius:10px; padding:14px 16px; margin-bottom:16px;
-    display:flex; align-items:center; justify-content:space-between;
-  }
+/* ── Phone notification ── */
+#notif-wrap { margin:0 auto 20px; width:280px; }
+#notif-card {
+  background: var(--sui-surface);
+  border: 1px solid var(--sui-border);
+  border-radius: var(--sui-radius-md);
+  padding: 12px 16px; box-shadow: var(--sui-shadow-sm);
+  display: flex; gap: 10px; align-items: flex-start;
+  opacity: 0; transform: translateY(-8px);
+  transition: opacity .35s ease, transform .35s ease;
+}
+#notif-card.visible { opacity: 1; transform: translateY(0); }
+.notif-icon {
+  width: 32px; height: 32px; border-radius: var(--sui-radius-xs); flex-shrink: 0;
+  background: var(--sui-primary);
+  display: flex; align-items: center; justify-content: center; font-size: 15px;
+}
+.notif-app  { font-size: 0.75rem; font-weight: 700; color: var(--sui-text-strong); }
+.notif-time { font-size: 0.625rem; color: var(--sui-text-muted); }
+.notif-body { font-size: 0.75rem; color: var(--sui-text-muted); margin-top: 3px; line-height: 1.5; }
+.notif-code { color: var(--sui-primary); font-weight: 700; letter-spacing: .1em; }
+
+/* ── Spinner ── */
+.spinner-wrap { padding: 40px 0; text-align: center; }
+.spinner-ring { position: relative; width: 48px; height: 48px; margin: 0 auto 14px; }
+.spinner-ring .track { position: absolute; inset: 0; border-radius: 50%; border: 2px solid var(--sui-border); }
+.spinner-ring .fill  { position: absolute; inset: 0; border-radius: 50%; border: 2px solid transparent; animation: spin .9s linear infinite; }
+.spinner-ring .icon  { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 18px; }
+.spinner-ring .fill.primary { border-top-color: var(--sui-primary); }
+.spinner-ring .fill.success { border-top-color: var(--sui-success); }
+.spinner-ring .fill.muted   { border-top-color: var(--sui-text-muted); }
+.spinner-title { font-weight: 600; font-size: 0.9375rem; color: var(--sui-text-strong); margin-bottom: 4px; }
+.spinner-sub   { font-size: 0.8125rem; color: var(--sui-text-muted); }
+
+/* ── Code block ── */
+.code-block {
+  background: var(--sui-surface-muted);
+  border: 1px solid var(--sui-border);
+  border-radius: var(--sui-radius-sm);
+  padding: 16px; font-family: 'Courier New', monospace;
+  font-size: 0.6875rem; line-height: 1.7;
+  color: var(--sui-text-muted);
+  overflow-x: auto; white-space: pre; margin-bottom: 12px; display: none;
+}
+.code-block.visible { display: block; animation: fadeUp .2s ease forwards; }
+
+/* ── Phone mockup ── */
+.phone-wrap { display:flex; justify-content:center; margin-bottom:20px; }
+.phone-body {
+  width: 200px; background: #1c1c28;
+  border-radius: 20px; border: 2px solid rgba(255,255,255,0.08);
+  padding: 16px 12px; box-shadow: var(--sui-shadow-md);
+}
+.phone-notch { width: 40px; height: 4px; border-radius: 3px; background: rgba(255,255,255,0.08); margin: 0 auto 12px; }
+.phone-time  { font-size: 0.625rem; color: rgba(255,255,255,0.3); text-align: center; margin-bottom: 8px; }
+.sms-bubble {
+  background: var(--sui-primary);
+  border-radius: 16px 16px 4px 16px;
+  padding: 10px 14px; max-width: 180px;
+  font-size: 0.8125rem; line-height: 1.5; color: #fff;
+  margin-left: auto; animation: slideIn .35s ease forwards;
+}
+
+/* ── What happened ── */
+.what-list { display:flex; flex-direction:column; gap:5px; }
+.what-item { display:flex; align-items:center; gap:8px; font-size:0.75rem; color: var(--sui-text-muted); }
+.what-item .chk { color: var(--sui-success-text); font-weight: 700; }
+
+/* ── Next steps ── */
+.next-steps { display:flex; flex-direction:column; gap:4px; }
+.next-item {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:9px 12px; background: var(--sui-surface);
+  border-radius: var(--sui-radius-sm); font-size: 0.8125rem; color: var(--sui-text-muted);
+  border: 1px solid var(--sui-border); cursor: pointer;
+  transition: background var(--sui-transition-fast), color var(--sui-transition-fast);
+}
+.next-item:hover { background: var(--sui-surface-muted); color: var(--sui-text-strong); }
+.next-item .arrow { color: var(--sui-primary); font-size: 0.75rem; }
+
+/* ── Prov reveal box ── */
+.prov-reveal-box {
+  background: var(--sui-surface-muted);
+  border: 1px solid rgba(0, 64, 221, 0.15);
+  border-radius: var(--sui-radius-sm);
+  padding: 14px 16px; margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+/* ── Utility ── */
+.hidden { display:none !important; }
+.mt8  { margin-top:8px; }
+.mt14 { margin-top:14px; }
+.mt16 { margin-top:16px; }
+.mb8  { margin-bottom:8px; }
+.mb14 { margin-bottom:14px; }
+.mb16 { margin-bottom:16px; }
+.mb20 { margin-bottom:20px; }
+.mb24 { margin-bottom:24px; }
+.center { text-align:center; }
+.mono { font-family: 'Courier New', monospace; font-size: 0.8125rem; }
+.small { font-size: 0.75rem; color: var(--sui-text-muted); }
+.primary-text { color: var(--sui-primary); }
+.strong { font-weight: 600; color: var(--sui-text-strong); }
+.tos {
+  font-size: 0.625rem; color: var(--sui-text-disabled);
+  margin-top: 10px; text-align: center; line-height: 1.5;
+}
+
+/* ── Section divider label ── */
+.section-label {
+  font-size: 0.625rem; font-weight: 600; color: var(--sui-text-muted);
+  letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px;
+}
 </style>
 </head>
 <body>
 <div id="app">
 
-  <!-- Header -->
+  <!-- Spring Icon Sprite (subset) -->
+  <svg aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+    <defs>
+      <symbol id="icon-CheckMD" viewBox="0 0 32 32"><path d="M28.981 4.701l-16.84 23.139-8.981-9 1.68-1.68 7.019 7 15.16-20.859z"/></symbol>
+      <symbol id="icon-LockMD" viewBox="0 0 32 32"><path d="M25.2 13.438v-3.438c-0.005-5.079-4.121-9.195-9.199-9.2h-0.001c-5.079 0.005-9.195 4.121-9.2 9.199v3.46c-3.288 0.941-4 3.197-4 8.541 0 8.576 1.826 9.2 13.2 9.2 11.349 0 13.173-0.6 13.2-8.813v-0.776c-0.018-5.107-0.734-7.269-4-8.173zM9.2 10c0.004-3.754 3.046-6.796 6.8-6.8h0c3.754 0.004 6.796 3.046 6.8 6.8v3.018c-1.76-0.179-3.986-0.219-6.8-0.219-2.813 0-5.038 0.040-6.8 0.227zM26.8 22.381c-0.019 6.179-0.019 6.419-10.8 6.419-10.8 0-10.8-0.128-10.8-6.8s0-6.8 10.8-6.8c10.781 0 10.781 0.24 10.8 6.416zM14.8 19h2.4v6h-2.4z"/></symbol>
+      <symbol id="icon-ArrowRightMD" viewBox="0 0 32 32"><path d="M29.701 16l-9.341 9.341-1.701-1.701 6.442-6.44h-23.101v-2.4h23.101l-6.442-6.44 1.701-1.701z"/></symbol>
+      <symbol id="icon-AlertMD" viewBox="0 0 32 32"><path d="M14.579 24.301c-0.358-0.342-0.58-0.824-0.58-1.357 0-0.022 0-0.045 0.001-0.067l-0 0.003c0-0 0-0.001 0-0.002 0-1.092 0.885-1.978 1.978-1.978 0.008 0 0.016 0 0.024 0h-0.001c0.56 0 1 0.2 1.4 0.579s0.6 0.859 0.6 1.4c0 0.379-0.101 0.699-0.28 1.019-0.179 0.298-0.422 0.541-0.711 0.715l-0.009 0.005c-0.301 0.181-0.64 0.261-1 0.261-0.002 0-0.004 0-0.007 0-0.551 0-1.051-0.221-1.414-0.579l0 0zM17.2 9.88h-2.4v8h2.4zM16 3.88c0.379 0 0.76 0.181 1 0.52l1.259 1.76c3.498 4.856 6.482 10.425 8.684 16.374l0.158 0.487 0.918 2.56c0.046 0.125 0.073 0.269 0.073 0.419 0 0.611-0.442 1.118-1.024 1.22l-0.007 0.001c-3.661 0.579-7.36 0.88-11.061 0.88s-7.4-0.301-11.059-0.88c-0.591-0.098-1.037-0.605-1.037-1.216 0-0.152 0.028-0.298 0.078-0.432l-0.003 0.009 0.922-2.56c2.354-6.435 5.337-12.005 8.981-17.069l-0.142 0.208 1.261-1.76c0.224-0.316 0.588-0.519 1-0.52h0z"/></symbol>
+      <symbol id="icon-SuccessMD" viewBox="0 0 32 32"><path d="M25.6 11.2l-11.899 11.939-5.701-5.539 1.6-1.6 3.821 3.459 10.579-9.859z"/><path d="M31.2 16c0 8.837-7.163 16-16 16s-16-7.163-16-16 7.163-16 16-16 16 7.163 16 16zM28.8 16c0-7.511-6.289-13.6-12.8-13.6s-13.6 6.089-13.6 13.6 6.089 13.6 13.6 13.6 12.8-6.089 12.8-13.6z"/></symbol>
+    </defs>
+  </svg>
+
+  <!-- ── Header ── -->
   <div id="header">
     <div class="header-left">
       <div class="logo-icon">⚡</div>
-      <span class="logo-name">RingCentral</span>
-      <span class="demo-badge">CPaaS DEMO</span>
+      <span class="logo-name">CPaaS</span>
+      <span class="demo-badge">Demo</span>
     </div>
     <div class="header-right">
       <div class="credits-info hidden" id="credits-display">
         <span class="status-dot"></span>
         <span id="credits-text">10 credits</span>
       </div>
-      <button id="restart-btn" onclick="reset()">↺ Restart demo</button>
+      <button id="restart-btn" onclick="reset()">↺ Restart</button>
     </div>
   </div>
 
-  <!-- Main -->
+  <!-- ── Main ── -->
   <div id="main">
 
     <!-- Stepper -->
@@ -393,13 +548,28 @@
       <p class="subtitle">Free account · $10 in credits · No credit card required</p>
 
       <div class="field-row">
-        <div class="field"><label>Full name</label><input class="inp" id="s0name" placeholder="Alex Rivera"/></div>
-        <div class="field"><label>Company</label><input class="inp" id="s0company" placeholder="Acme Corp"/></div>
+        <div class="field">
+          <label for="s0name">Full name</label>
+          <input class="inp" id="s0name" placeholder="Alex Rivera" autocomplete="name"/>
+        </div>
+        <div class="field">
+          <label for="s0company">Company</label>
+          <input class="inp" id="s0company" placeholder="Acme Corp" autocomplete="organization"/>
+        </div>
       </div>
-      <div class="field"><label>Work email</label><input class="inp" id="s0email" type="email" placeholder="alex@acme.com"/></div>
-      <div class="field"><label>Password</label><input class="inp" id="s0pw" type="password" placeholder="Min. 8 characters"/></div>
+      <div class="field">
+        <label for="s0email">Work email</label>
+        <input class="inp" id="s0email" type="email" placeholder="alex@acme.com" autocomplete="email"/>
+      </div>
+      <div class="field">
+        <label for="s0pw">Password</label>
+        <input class="inp" id="s0pw" type="password" placeholder="Min. 8 characters" autocomplete="new-password"/>
+      </div>
 
-      <button class="btn-primary mt8" id="s0btn" onclick="signup()" disabled>Create free account →</button>
+      <button class="btn-primary mt8" id="s0btn" onclick="signup()" disabled>
+        Create free account
+        <svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M29.701 16l-9.341 9.341-1.701-1.701 6.442-6.44h-23.101v-2.4h23.101l-6.442-6.44 1.701-1.701z"/></svg>
+      </button>
       <p class="tos">By signing up you agree to our Terms of Service and Privacy Policy</p>
     </div>
 
@@ -408,16 +578,16 @@
       <h1 class="title">Verify your phone number</h1>
       <p class="subtitle">We'll send a one-time code to confirm your identity and provision your first API number.</p>
 
-      <!-- form -->
+      <!-- KYC: form -->
       <div id="kyc-form">
         <div class="field">
-          <label>Mobile number</label>
-          <input class="inp" id="kyc-phone" type="tel" placeholder="+1 555 000 0000" oninput="kycFormChange()"/>
-          <p class="field-hint">This number will become your permitted SMS recipient after verification.</p>
+          <label for="kyc-phone">Mobile number</label>
+          <input class="inp" id="kyc-phone" type="tel" placeholder="+1 (555) 000-0000" oninput="kycFormChange()" autocomplete="tel"/>
+          <p class="field-hint">Your provisioned API number will share this area code.</p>
         </div>
         <div class="field-row">
           <div class="field">
-            <label>Country</label>
+            <label for="kyc-country">Country</label>
             <select class="sel" id="kyc-country">
               <option value="US">United States</option>
               <option value="CA">Canada</option>
@@ -428,7 +598,7 @@
             </select>
           </div>
           <div class="field">
-            <label>Primary use case</label>
+            <label for="kyc-usecase">Primary use case</label>
             <select class="sel" id="kyc-usecase" onchange="kycFormChange()">
               <option value="">Select…</option>
               <option value="notifications">Customer notifications</option>
@@ -439,33 +609,37 @@
             </select>
           </div>
         </div>
-        <button class="btn-primary mt8" id="kyc-send-btn" onclick="sendCode()" disabled>Send verification code →</button>
+        <button class="btn-primary mt8" id="kyc-send-btn" onclick="sendCode()" disabled>
+          Send verification code
+          <svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M29.701 16l-9.341 9.341-1.701-1.701 6.442-6.44h-23.101v-2.4h23.101l-6.442-6.44 1.701-1.701z"/></svg>
+        </button>
       </div>
 
-      <!-- sending -->
+      <!-- KYC: sending -->
       <div id="kyc-sending" class="spinner-wrap hidden">
         <div class="spinner-ring">
-          <div class="track"></div><div class="fill blue"></div>
+          <div class="track"></div>
+          <div class="fill primary"></div>
           <div class="icon">📱</div>
         </div>
         <p class="spinner-title">Sending verification code…</p>
         <p class="spinner-sub" id="kyc-sending-to"></p>
       </div>
 
-      <!-- OTP entry -->
+      <!-- KYC: OTP entry -->
       <div id="kyc-otp" class="hidden">
-        <p class="small center mb8">Message delivered to <span id="otp-phone-label"></span></p>
+        <p class="small center mb8">Message delivered to <strong id="otp-phone-label" style="color:var(--sui-text-strong)"></strong></p>
 
         <div id="notif-wrap">
           <div id="notif-card">
             <div class="notif-icon">💬</div>
-            <div style="flex:1">
-              <div class="notif-header">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;justify-content:space-between;margin-bottom:3px">
                 <span class="notif-app">Messages</span>
                 <span class="notif-time">now</span>
               </div>
               <div class="notif-body">
-                <strong style="color:var(--text-primary)">RingCentral:</strong> Your verification code is
+                <strong style="color:var(--sui-text-strong)">CPaaS:</strong> Your verification code is
                 <span class="notif-code">847392</span>. Valid for 10 minutes.
               </div>
             </div>
@@ -475,69 +649,76 @@
         <div id="otp-box">
           <h3>Enter the 6-digit code</h3>
           <div id="otp-wrap">
-            <input class="otp-digit" id="otp0" maxlength="1" inputmode="numeric" type="text" oninput="otpInput(0)" onkeydown="otpKey(0,event)" onpaste="otpPaste(event)"/>
-            <input class="otp-digit" id="otp1" maxlength="1" inputmode="numeric" type="text" oninput="otpInput(1)" onkeydown="otpKey(1,event)"/>
-            <input class="otp-digit" id="otp2" maxlength="1" inputmode="numeric" type="text" oninput="otpInput(2)" onkeydown="otpKey(2,event)"/>
-            <input class="otp-digit" id="otp3" maxlength="1" inputmode="numeric" type="text" oninput="otpInput(3)" onkeydown="otpKey(3,event)"/>
-            <input class="otp-digit" id="otp4" maxlength="1" inputmode="numeric" type="text" oninput="otpInput(4)" onkeydown="otpKey(4,event)"/>
-            <input class="otp-digit" id="otp5" maxlength="1" inputmode="numeric" type="text" oninput="otpInput(5)" onkeydown="otpKey(5,event)"/>
+            <input class="otp-digit" id="otp0" maxlength="1" inputmode="numeric" type="text" oninput="otpInput(0)" onkeydown="otpKey(0,event)" onpaste="otpPaste(event)" aria-label="Digit 1"/>
+            <input class="otp-digit" id="otp1" maxlength="1" inputmode="numeric" type="text" oninput="otpInput(1)" onkeydown="otpKey(1,event)" aria-label="Digit 2"/>
+            <input class="otp-digit" id="otp2" maxlength="1" inputmode="numeric" type="text" oninput="otpInput(2)" onkeydown="otpKey(2,event)" aria-label="Digit 3"/>
+            <input class="otp-digit" id="otp3" maxlength="1" inputmode="numeric" type="text" oninput="otpInput(3)" onkeydown="otpKey(3,event)" aria-label="Digit 4"/>
+            <input class="otp-digit" id="otp4" maxlength="1" inputmode="numeric" type="text" oninput="otpInput(4)" onkeydown="otpKey(4,event)" aria-label="Digit 5"/>
+            <input class="otp-digit" id="otp5" maxlength="1" inputmode="numeric" type="text" oninput="otpInput(5)" onkeydown="otpKey(5,event)" aria-label="Digit 6"/>
           </div>
-          <div id="otp-msg"></div>
+          <div id="otp-msg" role="status" aria-live="polite"></div>
         </div>
 
         <div id="resend-row">
           Didn't get it? <button class="btn-ghost" id="resend-btn" onclick="sendCode()" disabled>Resend code</button>
         </div>
-        <button class="btn-primary" id="otp-verify-btn" onclick="verifyCode()" disabled>Verify code →</button>
+
+        <button class="btn-primary" id="otp-verify-btn" onclick="verifyCode()" disabled>Verify code</button>
       </div>
 
-      <!-- verifying -->
+      <!-- KYC: verifying -->
       <div id="kyc-verifying" class="spinner-wrap hidden">
         <div class="spinner-ring">
-          <div class="track"></div><div class="fill green"></div>
+          <div class="track"></div>
+          <div class="fill success"></div>
           <div class="icon">🛡️</div>
         </div>
         <p class="spinner-title">Code verified!</p>
         <p class="spinner-sub">Provisioning your API number…</p>
       </div>
 
-      <!-- provisioning -->
+      <!-- KYC: provisioning -->
       <div id="kyc-provisioning" class="spinner-wrap hidden">
         <div class="spinner-ring">
-          <div class="track"></div><div class="fill orange"></div>
+          <div class="track"></div>
+          <div class="fill muted"></div>
           <div class="icon">⚡</div>
         </div>
         <p class="spinner-title">Provisioning your number…</p>
         <p class="spinner-sub">Registering with carrier network</p>
       </div>
 
-      <!-- done -->
+      <!-- KYC: done -->
       <div id="kyc-done" class="hidden" style="animation:fadeUp .4s ease forwards">
         <div class="success-box mb16">
           <div class="emoji">✅</div>
-          <div class="stitle">Identity verified</div>
-          <div class="ssub">Your phone number was confirmed successfully</div>
+          <div class="title">Identity verified</div>
+          <div class="sub">Your phone number was confirmed successfully</div>
         </div>
 
-        <div class="section-label">Your provisioned API number</div>
-        <div class="prov-reveal-box">
-          <div>
-            <div class="prov-badge mb8"><span class="hash">#</span><span id="prov-num-kyc"></span></div>
-            <p class="small mt8">Ready to send SMS</p>
-          </div>
-          <span style="font-size:22px">📲</span>
-        </div>
-
-        <div class="warn-notice">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          <div>
-            <strong>Trial restriction active</strong><br/>
-            During trial, outbound SMS is restricted to your verified number:
-            <span class="mono" id="kyc-done-phone"></span>
+        <div class="mb16">
+          <p class="section-label">Your provisioned API number</p>
+          <div class="prov-reveal-box">
+            <div>
+              <div class="prov-badge mb8"><span class="hash">#</span><span id="prov-num-kyc"></span></div>
+              <p class="small mt8">Ready to send SMS · matches your area code</p>
+            </div>
+            <span style="font-size:20px">📲</span>
           </div>
         </div>
 
-        <button class="btn-primary" onclick="goNext()">Claim my free credits →</button>
+        <div class="warn-box mb20">
+          <svg width="14" height="14" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><use href="#icon-LockMD"/></svg>
+          <div>
+            <p><strong>Trial restriction active</strong></p>
+            <p style="margin-top:3px">During trial, outbound SMS is restricted to your verified number: <span class="mono" id="kyc-done-phone"></span></p>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="goNext()">
+          Claim my free credits
+          <svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><use href="#icon-ArrowRightMD"/></svg>
+        </button>
       </div>
     </div>
 
@@ -549,32 +730,53 @@
       <div class="credits-card mb16">
         <div class="credits-top">
           <div>
-            <div class="credits-lbl">FREE CREDITS</div>
-            <div class="credits-amt">$10.00</div>
+            <div class="credits-label">Free Credits</div>
+            <div class="credits-amount">$10.00</div>
           </div>
           <div class="credits-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
           </div>
         </div>
         <div class="pill-row">
-          <span class="white-pill">~1,000 SMS</span>
-          <span class="white-pill">~200 Voice min</span>
-          <span class="white-pill">Full API access</span>
+          <span class="green-pill">~1,000 SMS</span>
+          <span class="green-pill">~200 Voice min</span>
+          <span class="green-pill">Full API access</span>
         </div>
       </div>
 
-      <div class="warn-notice">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <div class="warn-box">
+        <svg width="14" height="14" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><use href="#icon-LockMD"/></svg>
         <p><strong>Trial mode:</strong> SMS from <span class="mono" id="credits-from-num"></span> can only be sent to <span class="mono" id="credits-to-num"></span>. Upgrade to remove restrictions.</p>
       </div>
 
       <div class="feature-list">
-        <div class="feature-item"><span class="feature-icon">⚡</span><div><div class="feature-title">Instant access</div><div class="feature-desc">All APIs available immediately — no waiting period</div></div></div>
-        <div class="feature-item"><span class="feature-icon">📱</span><div><div class="feature-title">160+ countries</div><div class="feature-desc">Send SMS and make calls almost anywhere</div></div></div>
-        <div class="feature-item"><span class="feature-icon">🔧</span><div><div class="feature-title">SDKs for everything</div><div class="feature-desc">Node.js, Python, Java, Ruby, PHP, .NET and more</div></div></div>
+        <div class="feature-item">
+          <span class="feature-icon">⚡</span>
+          <div>
+            <div class="feature-title">Instant access</div>
+            <div class="feature-desc">All APIs available immediately — no waiting period</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">📱</span>
+          <div>
+            <div class="feature-title">160+ countries</div>
+            <div class="feature-desc">Send SMS and make calls almost anywhere</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">🔧</span>
+          <div>
+            <div class="feature-title">SDKs for everything</div>
+            <div class="feature-desc">Node.js, Python, Java, Ruby, PHP, .NET and more</div>
+          </div>
+        </div>
       </div>
 
-      <button class="btn-primary" onclick="goNext()">Build my first app →</button>
+      <button class="btn-primary" onclick="goNext()">
+        Build my first app
+        <svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><use href="#icon-ArrowRightMD"/></svg>
+      </button>
     </div>
 
     <!-- ═══ STEP 3: First App ═══ -->
@@ -582,7 +784,8 @@
       <h1 class="title">Send your first SMS</h1>
       <p class="subtitle">Your provisioned number is ready. Send a message to your verified number to complete the demo.</p>
 
-      <div class="card mb20">
+      <!-- Number summary -->
+      <div class="info-box mb20" style="display:block;padding:14px 16px">
         <div class="num-grid">
           <div>
             <div class="num-label">From (provisioned)</div>
@@ -591,7 +794,7 @@
           <div>
             <div class="num-label">To (verified only)</div>
             <div class="lock-pill">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <svg width="11" height="11" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><use href="#icon-LockMD"/></svg>
               <span id="sms-to-num"></span>
             </div>
           </div>
@@ -601,26 +804,27 @@
       <!-- Compose -->
       <div id="sms-compose">
         <div class="field mb16">
-          <label>Message</label>
-          <textarea class="tarea" id="sms-msg" rows="3" oninput="smsCharCount()">Hello from my first RingCentral app! 🚀</textarea>
-          <p class="field-hint" id="sms-charcount">40/160 chars · 1 credit (~$0.01)</p>
+          <label for="sms-msg">Message</label>
+          <textarea class="tarea" id="sms-msg" rows="3" oninput="smsCharCount()">Hello from my first CPaaS app! 🚀</textarea>
+          <p class="field-hint" id="sms-charcount">38/160 chars · 1 credit (~$0.01)</p>
         </div>
 
-        <button class="btn-toggle" onclick="toggleCode()">
+        <button class="btn-toggle" onclick="toggleCode()" aria-expanded="false" id="code-toggle-btn">
           <span>View API code</span>
           <span class="arrow" id="code-arrow">Show ▼</span>
         </button>
+
         <pre class="code-block" id="code-block"></pre>
 
         <button class="btn-primary" id="send-btn" onclick="sendSMS()">Send SMS →</button>
       </div>
 
-      <!-- Sent -->
+      <!-- Sent success -->
       <div id="sms-sent" class="hidden" style="animation:fadeUp .4s ease forwards">
         <div class="success-box mb16">
           <div class="emoji">🎉</div>
-          <div class="stitle">Message delivered!</div>
-          <div class="ssub" id="sms-api-resp"></div>
+          <div class="title">Message delivered!</div>
+          <div class="sub" id="sms-api-resp"></div>
         </div>
 
         <div class="phone-wrap">
@@ -633,8 +837,8 @@
           </div>
         </div>
 
-        <div class="card mb14">
-          <p class="section-label mb8">What happened</p>
+        <div class="info-box mb16" style="flex-direction:column;gap:0">
+          <p style="font-size:0.75rem;font-weight:600;color:var(--sui-text-muted);margin-bottom:10px">What happened</p>
           <div class="what-list">
             <div class="what-item"><span class="chk">✓</span> Auth token validated</div>
             <div class="what-item"><span class="chk">✓</span> Number lookup &amp; routing</div>
@@ -643,13 +847,13 @@
           </div>
         </div>
 
-        <div class="info-notice mb14" style="display:block;padding:16px">
-          <p class="section-label mb8">Ready to go further?</p>
+        <div style="background:var(--sui-primary-soft);border:1px solid rgba(0,64,221,0.15);border-radius:var(--sui-radius-sm);padding:16px;margin-bottom:16px">
+          <p style="font-weight:600;font-size:0.875rem;color:var(--sui-text-strong);margin-bottom:10px">Ready to go further?</p>
           <div class="next-steps">
-            <div class="next-item"><span>Remove trial restrictions</span><span class="arrow">→</span></div>
-            <div class="next-item"><span>Explore Voice &amp; Video APIs</span><span class="arrow">→</span></div>
-            <div class="next-item"><span>Set up delivery webhooks</span><span class="arrow">→</span></div>
-            <div class="next-item"><span>Add 2FA to your app</span><span class="arrow">→</span></div>
+            <div class="next-item" role="button" tabindex="0"><span>Remove trial restrictions</span><span class="arrow">→</span></div>
+            <div class="next-item" role="button" tabindex="0"><span>Explore Voice &amp; Video APIs</span><span class="arrow">→</span></div>
+            <div class="next-item" role="button" tabindex="0"><span>Set up delivery webhooks</span><span class="arrow">→</span></div>
+            <div class="next-item" role="button" tabindex="0"><span>Add 2FA to your app</span><span class="arrow">→</span></div>
           </div>
         </div>
 
@@ -657,67 +861,101 @@
       </div>
     </div>
 
-  </div>
-</div>
+  </div><!-- /main -->
+</div><!-- /app -->
 
 <script>
+// ── State ──────────────────────────────────────────────
 const DEMO_CODE = '847392';
-let state = { step:0, creditsUsed:0, kycPhone:'', provisionedNumber:'', resendTimer:null, resendCountdown:0 };
+let state = {
+  step: 0,
+  creditsUsed: 0,
+  kycPhone: '',
+  provisionedNumber: '',
+  resendTimer: null,
+  resendCountdown: 0,
+};
 
+// ── Helpers ────────────────────────────────────────────
 const el   = id => document.getElementById(id);
 const show = id => el(id).classList.remove('hidden');
 const hide = id => el(id).classList.add('hidden');
-const randId = () => Math.random().toString(36).slice(2,8);
-const genProvNum = () => {
-  const areas = ['415','650','408','669','510','212','617'];
-  const area = areas[Math.floor(Math.random()*areas.length)];
-  const d = String(1000000 + Math.floor(Math.random()*9000000));
-  return `+1 (${area}) ${d.slice(0,3)}-${d.slice(3,7)}`;
+const randId = () => Math.random().toString(36).slice(2, 8);
+
+/**
+ * Generate a provisioned number whose area code matches the user's phone.
+ * Extracts the 3-digit area code from a US/CA-style number and reuses it,
+ * ensuring the provisioned API number feels local to the user.
+ */
+const genProvNum = (userPhone) => {
+  const digits = (userPhone || '').replace(/\D/g, '');
+  let areaCode;
+  // E.164 US/CA: +1 followed by 10 digits → area code is positions 1–3
+  if (digits.startsWith('1') && digits.length >= 11) {
+    areaCode = digits.slice(1, 4);
+  } else if (digits.length >= 10) {
+    // No country prefix: area code is first 3 digits
+    areaCode = digits.slice(0, 3);
+  } else {
+    // Fallback for short/non-standard input
+    areaCode = ['415', '650', '408', '669', '510'][Math.floor(Math.random() * 5)];
+  }
+  const d = String(Math.floor(1000000 + Math.random() * 9000000));
+  return `+1 (${areaCode}) ${d.slice(0, 3)}-${d.slice(3, 7)}`;
 };
 
+// ── Stepper ────────────────────────────────────────────
 function updateStepper() {
-  const labels = ['Sign Up','Verify Identity','Your Credits','Build First App'];
+  const labels = ['Sign Up', 'Verify Identity', 'Your Credits', 'Build First App'];
   for (let i = 0; i < 4; i++) {
-    const c = el('sc'+i), l = el('sl'+i);
-    c.className = 'step-circle'; l.className = 'step-label';
-    if (i < state.step)        { c.classList.add('done');   c.innerHTML='✓';   l.classList.add('done'); }
-    else if (i === state.step) { c.classList.add('active'); c.textContent=i+1; l.classList.add('active'); }
-    else                       { c.textContent=i+1; }
+    const c = el('sc' + i), l = el('sl' + i);
+    c.className = 'step-circle';
+    l.className = 'step-label';
+    if (i < state.step)        { c.classList.add('done');   c.innerHTML = '✓';   l.classList.add('done');   }
+    else if (i === state.step) { c.classList.add('active'); c.textContent = i+1; l.classList.add('active'); }
+    else                       { c.textContent = i+1; }
     l.textContent = labels[i];
-    if (i < 3) el('conn'+i).className = 'step-connector'+(i < state.step ? ' done' : '');
+    if (i < 3) el('conn' + i).className = 'step-connector' + (i < state.step ? ' done' : '');
   }
 }
 
 function goNext() {
-  hide('step'+state.step);
+  hide('step' + state.step);
   state.step++;
   updateStepper();
-  show('step'+state.step);
+  show('step' + state.step);
   if (state.step === 2) initCreditsStep();
   if (state.step === 3) initSMSStep();
   if (state.step >= 1) el('restart-btn').style.display = 'block';
 }
 
-// Step 0
-['s0name','s0email','s0pw'].forEach(id => {
+// ── Step 0: Signup ─────────────────────────────────────
+['s0name', 's0email', 's0pw'].forEach(id => {
   el(id).addEventListener('input', () => {
-    el('s0btn').disabled = !(el('s0name').value.trim() && el('s0email').value.trim() && el('s0pw').value);
+    const ok = el('s0name').value.trim() && el('s0email').value.trim() && el('s0pw').value.length >= 1;
+    el('s0btn').disabled = !ok;
   });
 });
 function signup() { goNext(); }
 
-// Step 1 KYC
+// ── Step 1: KYC ────────────────────────────────────────
 function kycFormChange() {
-  el('kyc-send-btn').disabled = !(el('kyc-phone').value.trim() && el('kyc-usecase').value);
+  const phone   = el('kyc-phone').value.trim();
+  const usecase = el('kyc-usecase').value;
+  el('kyc-send-btn').disabled = !(phone && usecase);
 }
+
 function kycShow(stage) {
-  ['kyc-form','kyc-sending','kyc-otp','kyc-verifying','kyc-provisioning','kyc-done'].forEach(id => hide(id));
+  ['kyc-form','kyc-sending','kyc-otp','kyc-verifying','kyc-provisioning','kyc-done']
+    .forEach(id => hide(id));
   show(stage);
 }
+
 function sendCode() {
   state.kycPhone = el('kyc-phone') ? el('kyc-phone').value.trim() : state.kycPhone;
   kycShow('kyc-sending');
-  el('kyc-sending-to').textContent = 'Delivering to '+state.kycPhone;
+  el('kyc-sending-to').textContent = 'Delivering to ' + state.kycPhone;
+
   setTimeout(() => {
     kycShow('kyc-otp');
     el('otp-phone-label').textContent = state.kycPhone;
@@ -726,134 +964,222 @@ function sendCode() {
     setTimeout(() => el('notif-card').classList.add('visible'), 600);
   }, 1800);
 }
-function getOTP() { return [0,1,2,3,4,5].map(i => el('otp'+i).value).join(''); }
+
+// OTP helpers
+function getOTP() {
+  return [0,1,2,3,4,5].map(i => el('otp'+i).value).join('');
+}
 function clearOTP() {
-  [0,1,2,3,4,5].forEach(i => { const d=el('otp'+i); d.value=''; d.className='otp-digit'; });
-  el('otp-msg').textContent=''; el('otp-verify-btn').disabled=true;
-  el('notif-card').classList.remove('visible'); el('otp-wrap').classList.remove('otp-shake');
+  [0,1,2,3,4,5].forEach(i => {
+    const d = el('otp' + i);
+    d.value = '';
+    d.className = 'otp-digit';
+  });
+  el('otp-msg').textContent = '';
+  el('otp-verify-btn').disabled = true;
+  el('notif-card').classList.remove('visible');
+  el('otp-wrap').classList.remove('otp-shake');
 }
 function refreshOTPStyles() {
   [0,1,2,3,4,5].forEach(i => {
-    const d=el('otp'+i); d.className='otp-digit'+(d.value?' filled':'');
+    const d = el('otp' + i);
+    d.className = 'otp-digit' + (d.value ? ' filled' : '');
   });
-  const val=getOTP(); el('otp-verify-btn').disabled=val.length<6;
-  if (val.length>0&&val.length<6) { el('otp-msg').textContent=(6-val.length)+' digits remaining'; el('otp-msg').style.color='var(--text-muted)'; }
-  else if (val.length===0) el('otp-msg').textContent='';
+  const val = getOTP();
+  el('otp-verify-btn').disabled = val.length < 6;
+  if (val.length > 0 && val.length < 6) {
+    el('otp-msg').textContent = (6 - val.length) + ' digits remaining';
+  } else if (val.length === 0) {
+    el('otp-msg').textContent = '';
+  }
 }
 function otpInput(i) {
-  const d=el('otp'+i); d.value=d.value.replace(/\D/g,'').slice(-1);
+  const d = el('otp' + i);
+  d.value = d.value.replace(/\D/g, '').slice(-1);
   refreshOTPStyles();
-  if (d.value && i<5) el('otp'+(i+1)).focus();
-  if (getOTP().length===6) setTimeout(verifyCode,120);
+  if (d.value && i < 5) el('otp' + (i+1)).focus();
+  if (getOTP().length === 6) setTimeout(verifyCode, 120);
 }
-function otpKey(i,e) { if(e.key==='Backspace'&&!el('otp'+i).value&&i>0) el('otp'+(i-1)).focus(); }
+function otpKey(i, e) {
+  if (e.key === 'Backspace' && !el('otp'+i).value && i > 0) el('otp'+(i-1)).focus();
+}
 function otpPaste(e) {
-  const p=e.clipboardData.getData('text').replace(/\D/g,'').slice(0,6); if(!p)return;
-  e.preventDefault(); p.split('').forEach((ch,i)=>{if(i<6)el('otp'+i).value=ch;});
-  refreshOTPStyles(); if(p.length===6) setTimeout(verifyCode,120);
+  const p = e.clipboardData.getData('text').replace(/\D/g,'').slice(0,6);
+  if (!p) return;
+  e.preventDefault();
+  p.split('').forEach((ch, i) => { if (i < 6) el('otp'+i).value = ch; });
+  refreshOTPStyles();
+  if (p.length === 6) setTimeout(verifyCode, 120);
 }
+
 function verifyCode() {
-  if (getOTP()!==DEMO_CODE) {
-    [0,1,2,3,4,5].forEach(i=>el('otp'+i).classList.add('error'));
+  const val = getOTP();
+  if (val !== DEMO_CODE) {
+    [0,1,2,3,4,5].forEach(i => el('otp'+i).classList.add('error'));
     el('otp-wrap').classList.add('otp-shake');
-    el('otp-msg').textContent='Incorrect code — try again'; el('otp-msg').style.color='var(--error)';
-    setTimeout(()=>{ [0,1,2,3,4,5].forEach(i=>{const d=el('otp'+i);d.classList.remove('error');d.className='otp-digit'+(d.value?' filled':'');}); el('otp-wrap').classList.remove('otp-shake'); },1800);
+    el('otp-msg').textContent = 'Incorrect code — try again';
+    el('otp-msg').style.color = 'var(--sui-danger-text)';
+    setTimeout(() => {
+      [0,1,2,3,4,5].forEach(i => {
+        const d = el('otp'+i);
+        d.className = 'otp-digit' + (d.value ? ' filled' : '');
+      });
+      el('otp-wrap').classList.remove('otp-shake');
+      el('otp-msg').style.color = 'var(--sui-text-muted)';
+    }, 1800);
     return;
   }
-  kycShow('kyc-verifying'); clearResendCountdown();
-  setTimeout(()=>{ kycShow('kyc-provisioning');
-    setTimeout(()=>{ state.provisionedNumber=genProvNum(); el('prov-num-kyc').textContent=state.provisionedNumber; el('kyc-done-phone').textContent=state.kycPhone; kycShow('kyc-done'); },1800);
-  },1600);
+  kycShow('kyc-verifying');
+  clearResendCountdown();
+  setTimeout(() => {
+    kycShow('kyc-provisioning');
+    setTimeout(() => {
+      // Generate provisioned number matching the user's area code
+      state.provisionedNumber = genProvNum(state.kycPhone);
+      el('prov-num-kyc').textContent = state.provisionedNumber;
+      el('kyc-done-phone').textContent = state.kycPhone;
+      kycShow('kyc-done');
+    }, 1800);
+  }, 1600);
 }
-function startResendCountdown(n) { state.resendCountdown=n; el('resend-btn').disabled=true; tickResend(); }
+
+function startResendCountdown(n) {
+  state.resendCountdown = n;
+  el('resend-btn').disabled = true;
+  tickResend();
+}
 function tickResend() {
-  if (state.resendCountdown>0) { el('resend-btn').textContent='Resend in '+state.resendCountdown+'s'; state.resendCountdown--; state.resendTimer=setTimeout(tickResend,1000); }
-  else { el('resend-btn').textContent='Resend code'; el('resend-btn').disabled=false; }
+  if (state.resendCountdown > 0) {
+    el('resend-btn').textContent = 'Resend in ' + state.resendCountdown + 's';
+    state.resendCountdown--;
+    state.resendTimer = setTimeout(tickResend, 1000);
+  } else {
+    el('resend-btn').textContent = 'Resend code';
+    el('resend-btn').disabled = false;
+  }
 }
-function clearResendCountdown() { clearTimeout(state.resendTimer); state.resendCountdown=0; }
+function clearResendCountdown() {
+  clearTimeout(state.resendTimer);
+  state.resendCountdown = 0;
+}
 
-// Step 2
+// ── Step 2: Credits ────────────────────────────────────
 function initCreditsStep() {
-  el('credits-from-num').textContent=state.provisionedNumber;
-  el('credits-to-num').textContent=state.kycPhone;
-  show('credits-display'); updateCredits();
+  el('credits-from-num').textContent = state.provisionedNumber;
+  el('credits-to-num').textContent   = state.kycPhone;
+  show('credits-display');
+  updateCredits();
 }
-function updateCredits() { el('credits-text').textContent=(10-state.creditsUsed)+' credits'; }
+function updateCredits() {
+  el('credits-text').textContent = (10 - state.creditsUsed) + ' credits';
+}
 
-// Step 3
+// ── Step 3: SMS ─────────────────────────────────────────
 function initSMSStep() {
-  el('sms-from-num').textContent=state.provisionedNumber;
-  el('sms-to-num').textContent=state.kycPhone;
-  smsCharCount(); renderCode();
-}
-function smsCharCount() {
-  const msg=el('sms-msg').value;
-  el('sms-charcount').textContent=msg.length+'/160 chars · 1 credit (~$0.01)';
+  el('sms-from-num').textContent = state.provisionedNumber;
+  el('sms-to-num').textContent   = state.kycPhone;
+  smsCharCount();
   renderCode();
 }
-let codeOpen=false;
-function toggleCode() {
-  codeOpen=!codeOpen;
-  el('code-block').className='code-block'+(codeOpen?' visible':'');
-  el('code-arrow').textContent=codeOpen?'Hide ▲':'Show ▼';
-}
-function renderCode() {
-  const from=(state.provisionedNumber||'+1 (415) 555-0100').replace(/\D/g,'');
-  const to=(state.kycPhone||'+1 555 000 0000').replace(/\D/g,'');
-  const msg=el('sms-msg')?el('sms-msg').value:'';
-  el('code-block').textContent=
-`const RingCentral = require('@ringcentral/sdk');
 
-const sdk = new RingCentral.SDK({
-  clientId:     'YOUR_CLIENT_ID',
+function smsCharCount() {
+  const msg = el('sms-msg').value;
+  el('sms-charcount').textContent = msg.length + '/160 chars · 1 credit (~$0.01)';
+  renderCode();
+}
+
+let codeOpen = false;
+function toggleCode() {
+  codeOpen = !codeOpen;
+  el('code-block').className = 'code-block' + (codeOpen ? ' visible' : '');
+  el('code-arrow').textContent = codeOpen ? 'Hide ▲' : 'Show ▼';
+  el('code-toggle-btn').setAttribute('aria-expanded', codeOpen);
+}
+
+function renderCode() {
+  const from = (state.provisionedNumber || '+1 (415) 555-0100').replace(/\D/g,'');
+  const to   = (state.kycPhone || '+1 555 000 0000').replace(/\D/g,'');
+  const msg  = el('sms-msg') ? el('sms-msg').value : '';
+  el('code-block').textContent =
+`const rc = require('@ringcentral/sdk');
+
+const sdk = new rc.SDK({
+  clientId: 'YOUR_CLIENT_ID',
   clientSecret: 'YOUR_CLIENT_SECRET',
-  server:        RingCentral.SDK.server.production
+  server: rc.SDK.server.production
 });
 
 await sdk.login({ jwt: 'YOUR_JWT_TOKEN' });
 
-// Provisioned number: ${state.provisionedNumber||'+1 (415) 555-0100'}
-// Permitted recipient: ${state.kycPhone||'+1 555 000 0000'}
+// Provisioned number: ${state.provisionedNumber || '+1 (415) 555-0100'}
+// Permitted recipient: ${state.kycPhone || '+1 555 000 0000'}
 
-const resp = await sdk.platform()
+const response = await sdk.platform()
   .post('/restapi/v1.0/account/~/extension/~/sms', {
     from: { phoneNumber: '+${from}' },
     to:   [{ phoneNumber: '+${to}' }],
     text: '${msg}'
   });
 
-console.log('Sent! Message ID:', resp.json().id);`;
-}
-function sendSMS() {
-  const btn=el('send-btn'); btn.disabled=true;
-  btn.innerHTML='<svg width="16" height="16" viewBox="0 0 18 18" fill="none" style="animation:spin .8s linear infinite"><circle cx="9" cy="9" r="7" stroke="white" stroke-width="2" stroke-opacity=".35"/><path d="M9 2a7 7 0 0 1 7 7" stroke="white" stroke-width="2" stroke-linecap="round"/></svg> Sending…';
-  setTimeout(()=>{
-    state.creditsUsed++; updateCredits();
-    const msg=el('sms-msg').value; const now=new Date().toLocaleTimeString();
-    hide('sms-compose'); show('sms-sent');
-    el('sms-api-resp').textContent='API response: 200 OK · msg_'+randId();
-    el('phone-time').textContent=state.provisionedNumber+' · '+now;
-    el('phone-msg').textContent=msg;
-  },2000);
+console.log('Sent:', response.json().id);`;
 }
 
+function sendSMS() {
+  const btn = el('send-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 18 18" fill="none" style="animation:spin .8s linear infinite"><circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="2" stroke-opacity=".3"/><path d="M9 2a7 7 0 0 1 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Sending…';
+
+  setTimeout(() => {
+    state.creditsUsed++;
+    updateCredits();
+    const msg = el('sms-msg').value;
+    const now = new Date().toLocaleTimeString();
+    hide('sms-compose');
+    show('sms-sent');
+    const rid = randId();
+    el('sms-api-resp').textContent = 'API response: 200 OK · msg_demo_' + rid;
+    el('phone-time').textContent = state.provisionedNumber + ' · ' + now;
+    el('phone-msg').textContent  = msg;
+  }, 2000);
+}
+
+// ── Reset ──────────────────────────────────────────────
 function reset() {
-  state={step:0,creditsUsed:0,kycPhone:'',provisionedNumber:'',resendTimer:null,resendCountdown:0};
   clearResendCountdown();
-  for(let i=0;i<4;i++){const s=el('step'+i);s.classList.add('hidden');s.classList.remove('panel');}
-  el('step0').classList.remove('hidden'); el('step0').classList.add('panel');
-  ['s0name','s0email','s0company','s0pw'].forEach(id=>el(id).value='');
-  el('s0btn').disabled=true;
-  el('kyc-phone').value=''; el('kyc-usecase').value=''; el('kyc-send-btn').disabled=true;
-  kycShow('kyc-form'); clearOTP(); el('notif-card').classList.remove('visible');
-  el('sms-msg').value='Hello from my first RingCentral app! 🚀';
-  el('send-btn').disabled=false; el('send-btn').textContent='Send SMS →';
+  state = { step:0, creditsUsed:0, kycPhone:'', provisionedNumber:'', resendTimer:null, resendCountdown:0 };
+
+  for (let i = 0; i < 4; i++) {
+    el('step'+i).classList.add('hidden');
+    el('step'+i).classList.remove('panel');
+  }
+  el('step0').classList.remove('hidden');
+  el('step0').classList.add('panel');
+
+  ['s0name','s0email','s0company','s0pw'].forEach(id => el(id).value = '');
+  el('s0btn').disabled = true;
+
+  el('kyc-phone').value = ''; el('kyc-usecase').value = ''; el('kyc-country').value = 'US';
+  el('kyc-send-btn').disabled = true;
+  kycShow('kyc-form');
+  clearOTP();
+  el('notif-card').classList.remove('visible');
+
+  el('sms-msg').value = 'Hello from my first CPaaS app! 🚀';
+  el('send-btn').disabled = false;
+  el('send-btn').textContent = 'Send SMS →';
   hide('sms-sent'); show('sms-compose');
-  codeOpen=false; el('code-block').className='code-block'; el('code-arrow').textContent='Show ▼';
-  hide('credits-display'); el('restart-btn').style.display='none';
+  codeOpen = false;
+  el('code-block').className = 'code-block';
+  el('code-arrow').textContent = 'Show ▼';
+  el('code-toggle-btn').setAttribute('aria-expanded', 'false');
+
+  hide('credits-display');
+  el('restart-btn').style.display = 'none';
+
   updateStepper();
 }
 
+// ── Init ───────────────────────────────────────────────
 updateStepper();
 </script>
 </body>
