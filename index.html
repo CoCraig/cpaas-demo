@@ -545,7 +545,7 @@ p.subtitle {
     <!-- ═══ STEP 0: Sign Up ═══ -->
     <div id="step0" class="panel">
       <h1 class="title">Start building in minutes</h1>
-      <p class="subtitle">Free account · $10 in credits · No credit card required</p>
+      <p class="subtitle">Free account · $20 in credits · No credit card required</p>
 
       <div class="field-row">
         <div class="field">
@@ -725,20 +725,20 @@ p.subtitle {
     <!-- ═══ STEP 2: Credits ═══ -->
     <div id="step2" class="panel hidden">
       <h1 class="title">You're all set. 🎉</h1>
-      <p class="subtitle">Your account is live with $10 in free credits — enough to send ~1,000 SMS.</p>
+      <p class="subtitle">Your account is live with $20 in free credits — enough to send ~2,000 SMS.</p>
 
       <div class="credits-card mb16">
         <div class="credits-top">
           <div>
             <div class="credits-label">Free Credits</div>
-            <div class="credits-amount">$10.00</div>
+            <div class="credits-amount">$20.00</div>
           </div>
           <div class="credits-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
           </div>
         </div>
         <div class="pill-row">
-          <span class="green-pill">~1,000 SMS</span>
+          <span class="green-pill">~2,000 SMS</span>
           <span class="green-pill">~200 Voice min</span>
           <span class="green-pill">Full API access</span>
         </div>
@@ -1071,7 +1071,7 @@ function initCreditsStep() {
   updateCredits();
 }
 function updateCredits() {
-  el('credits-text').textContent = (10 - state.creditsUsed) + ' credits';
+  el('credits-text').textContent = (20 - state.creditsUsed) + ' credits';
 }
 
 // ── Step 3: SMS ─────────────────────────────────────────
